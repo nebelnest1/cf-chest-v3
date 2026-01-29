@@ -252,17 +252,30 @@
 
       let timeLeft = 15, state = "play", limits = 12;
 
-      function applyLang(langCode, lang) {
-        document.documentElement.lang = langCode;
-        document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
+     function setTextWithBr(el, s) {
+  el.textContent = "";
+  const parts = String(s || "").split(/<br\s*\/?>|\n/gi);
+  parts.forEach((p, i) => {
+    el.appendChild(document.createTextNode(p));
+    if (i !== parts.length - 1) {
+      el.appendChild(document.createElement("br"));
+    }
+  });
+}
 
-        // CLS FIX: use textContent instead of innerHTML
-        txtH1.textContent = (lang.h1 || "");
-        txtSub.textContent = lang.sub || "";
-        txtHint.textContent = lang.hint || "";
-        txtLeft.textContent = lang.left || "";
-        claimBtn.textContent = lang.btn || "Continue";
-      }
+function applyLang(langCode, lang) {
+  document.documentElement.lang = langCode;
+  document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
+
+  // h1 — с поддержкой <br> из локали
+  setTextWithBr(txtH1, lang.h1 || "");
+
+  // остальное — строго textContent (без HTML)
+  txtSub.textContent  = lang.sub  || "";
+  txtHint.textContent = lang.hint || "";
+  txtLeft.textContent = lang.left || "";
+  claimBtn.textContent = lang.btn || "Continue";
+}
 
       function goFinal(isWin, lang) {
         state = isWin ? "win" : "lost";
@@ -364,3 +377,4 @@
   </script>
 </body>
 </html>
+
