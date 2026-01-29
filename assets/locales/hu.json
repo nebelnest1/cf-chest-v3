@@ -1,0 +1,13 @@
+{
+  "h1": "SIESS!<br>AZ AJÁNLAT LEJÁR",
+  "sub": "Ne hagyd, hogy a bónuszod eltűnjön!",
+  "hint": "⚡ KOPPINTS A LÁDÁRA A FELDOLDÁSHOZ ⚡",
+  "winTitle": "💰 HOZZÁFÉRÉS ENGEDÉLYEZVE!",
+  "winSub": "A bónuszod lent készen áll",
+  "lostTitle": "⚠️ LEJÁRT AZ IDŐ!",
+  "lostSub": "Utolsó esély a bónuszra",
+  "lostHint": "NYOMD MEG A GOMBOT MOST!",
+  "btn": "BÓNUSZ KÉRÉSE",
+  "left": "Hátralévő bónuszok:",
+  "notifVerb": "megszerezte"
+}

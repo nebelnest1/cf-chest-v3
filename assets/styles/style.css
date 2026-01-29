@@ -1,0 +1,180 @@
+/* =========================================================
+   V2 POP CHEST — ULTIMATE CONSOLIDATED STYLE 2026
+   ========================================================= */
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    /* Тот самый дорогой фон с глубиной */
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+    color: #ffffff;
+    font-family: system-ui, -apple-system, sans-serif;
+    text-align: center;
+    margin: 0;
+    min-height: 100svh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Фоновое мягкое свечение */
+body::before {
+    content: "";
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.04) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.v2-wrap {
+    position: relative;
+    z-index: 1;
+    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+    padding: 18px;
+    padding-top: clamp(40px, 12vh, 100px);
+}
+
+.v2 { width: min(720px, 100%); }
+
+/* Заголовки */
+.v2 h1 {
+    font-size: clamp(22px, 5.5vw, 34px);
+    font-weight: 900;
+    margin: 0 0 8px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 193, 7, 0.2);
+    line-height: 1.1;
+}
+
+.sub { 
+    opacity: 0.85; 
+    font-weight: 600; 
+    font-size: 15px; 
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Таймер */
+.timer { 
+    font-size: 20px; 
+    font-weight: 900; 
+    color: #ff4444; 
+    margin: 10px 0 20px; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.timer.urgent { animation: blink 0.5s infinite alternate; transform: scale(1.1); }
+
+@keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
+
+/* Сетка и Сундуки */
+.v2-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+.v2-tile {
+    position: relative;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 18px 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+/* Эффект при наведении/тапе */
+.v2-tile:active { transform: scale(0.95); }
+
+.v2-tile.dim { opacity: 0.2; filter: grayscale(1); pointer-events: none; }
+
+.v2-tile.chosen { 
+    border-color: #ffca28; 
+    background: rgba(255, 202, 40, 0.12);
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.4); 
+    z-index: 5;
+}
+
+/* Изображения сундуков */
+.v2-img { width: 100%; display: flex; justify-content: center; }
+.v2-img img { 
+    width: 92%; 
+    height: auto; 
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.v2-tile.opening img { transform: scale(1.1) rotate(5deg); }
+.v2-tile.opened img { transform: scale(1.18); filter: brightness(1.2); }
+
+/* Взрыв монет */
+.v2-tile.opened::after {
+    content: "💰";
+    position: absolute;
+    top: 10%; left: 50%;
+    font-size: 32px;
+    animation: coins-fly 1.2s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes coins-fly {
+    0% { transform: translate(-50%, 0) scale(0); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: translate(-50%, -100px) scale(2); opacity: 0; }
+}
+
+/* Панель результата */
+.v2-panel {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 22px;
+    margin-top: 15px;
+    display: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+.v2-panel.show { display: block; animation: fadeInUp 0.5s both; }
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Кнопка */
+.game__button {
+    width: 100%;
+    padding: 22px;
+    border-radius: 60px;
+    border: none;
+    background: linear-gradient(180deg, #ffca28 0%, #ffb300 100%);
+    font-weight: 900;
+    font-size: clamp(18px, 4vw, 22px);
+    color: #000;
+    box-shadow: 0 6px 0 #b37700, 0 15px 35px rgba(255, 179, 0, 0.4);
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: transform 0.1s;
+}
+.game__button:active { transform: translateY(3px); box-shadow: 0 3px 0 #b37700; }
+
+/* Вспомогательные элементы */
+.v2-hint { margin: 18px 0; font-size: 16px; font-weight: 700; color: #ffca28; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+.v2-clickany { position: fixed; inset: 0; z-index: 9999; display: none; }
+.v2-clickany.on { display: block; }
+
+.last-wins { font-size: 13px; opacity: 0.6; margin-top: 20px; }
+.last-wins span { color: #ffca28; font-weight: bold; }
+
+.hidden { display: none !important; }
+
+/* Адаптив под совсем маленькие экраны */
+@media (max-height: 600px) {
+    .v2-wrap { padding-top: 20px; }
+    .v2-tile { padding: 10px 5px; }
+    .v2 h1 { font-size: 20px; }
+}

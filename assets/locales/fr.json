@@ -1,0 +1,13 @@
+{
+  "h1": "VITE !<br>L’OFFRE SE TERMINE",
+  "sub": "Ne laisse pas ton bonus disparaître !",
+  "hint": "⚡ TOUCHE LE COFFRE POUR DÉBLOQUER ⚡",
+  "winTitle": "💰 ACCÈS ACCORDÉ !",
+  "winSub": "Ton bonus est prêt ci-dessous",
+  "lostTitle": "⚠️ TEMPS ÉCOULÉ !",
+  "lostSub": "Dernière chance de récupérer ton bonus",
+  "lostHint": "CLIQUE SUR LE BOUTON MAINTENANT !",
+  "btn": "OBTENIR MON BONUS",
+  "left": "Bonus restants :",
+  "notifVerb": "a réclamé"
+}

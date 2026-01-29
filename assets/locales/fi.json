@@ -1,0 +1,13 @@
+{
+  "h1": "NOPEASTI!<br>TARJOUS PÄÄTTYY",
+  "sub": "Älä anna bonuksesi kadota!",
+  "hint": "⚡ NAPAUTA ARKKUA AVATAKSESI ⚡",
+  "winTitle": "💰 PÄÄSY MYÖNNETTY!",
+  "winSub": "Bonuksesi on valmiina alhaalla",
+  "lostTitle": "⚠️ AIKA LOPPUI!",
+  "lostSub": "Viimeinen mahdollisuus lunastaa",
+  "lostHint": "PAINA PAINIKETTA NYT!",
+  "btn": "LUNASTA BONUS",
+  "left": "Bonuksia jäljellä:",
+  "notifVerb": "lunasti"
+}

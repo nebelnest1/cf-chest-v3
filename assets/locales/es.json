@@ -1,0 +1,13 @@
+{
+  "h1": "¡RÁPIDO!<br>LA OFERTA TERMINA",
+  "sub": "No dejes que tu bono desaparezca.",
+  "hint": "⚡ TOCA EL COFRE PARA DESBLOQUEAR ⚡",
+  "winTitle": "💰 ¡ACCESO CONCEDIDO!",
+  "winSub": "Tu bono está listo abajo",
+  "lostTitle": "⚠️ ¡TIEMPO AGOTADO!",
+  "lostSub": "Última oportunidad para reclamar",
+  "lostHint": "¡PULSA EL BOTÓN YA!",
+  "btn": "OBTENER BONO",
+  "left": "Bonos restantes:",
+  "notifVerb": "reclamó"
+}
