@@ -138,63 +138,50 @@
 </head>
 
 <body>
-<!-- ====== AGE MODAL (18+) — вставь сразу после <body> ====== -->
-<div id="ageGate" style="
-  position:fixed; inset:0; z-index:99999;
-  background:rgba(0,0,0,.92);
-  display:flex; align-items:center; justify-content:center;
-  text-align:center;
-">
-  <div style="width:min(420px, calc(100vw - 32px)); padding:22px;">
-    <div style="font-size:44px; font-weight:900; line-height:1; margin-bottom:10px;">🔞</div>
-    <div style="font-size:20px; font-weight:900; margin-bottom:10px; letter-spacing:.3px;">
-      ADULT CONTENT
-    </div>
-    <div style="font-size:14px; opacity:.85; line-height:1.35; margin-bottom:18px;">
-      Confirm you are 18+ to continue.
-    </div>
-
-    <button id="ageOkBtn" type="button" style="
-      width:100%;
-      padding:18px 18px;
-      border-radius:16px;
-      border:0;
-      cursor:pointer;
-      font-size:20px;
-      font-weight:900;
-      text-transform:uppercase;
-      color:#000;
-      background:linear-gradient(180deg,#ffca28 0%, #ff8f00 100%);
-      box-shadow:0 10px 0 #b36200, 0 18px 34px rgba(0,0,0,.6);
-    ">
-      ENTER 🔞
-    </button>
-
-    <div style="margin-top:12px; font-size:12px; opacity:.6;">
-      By continuing you confirm legal age in your country.
-    </div>
-  </div>
-</div>
-
 <script>
 (function(){
+  const AGE_I18N = {
+    en: { title: "ADULT CONTENT", btn: "ENTER 🔞" },
+    es: { title: "CONTENIDO PARA ADULTOS", btn: "ENTRAR 🔞" },
+    pt: { title: "CONTEÚDO ADULTO", btn: "ENTRAR 🔞" },
+    fr: { title: "CONTENU ADULTE", btn: "ENTRER 🔞" },
+    de: { title: "ERWACHSENE INHALTE", btn: "EINTRETEN 🔞" },
+    it: { title: "CONTENUTI PER ADULTI", btn: "ENTRA 🔞" },
+    ru: { title: "КОНТЕНТ 18+", btn: "ВОЙТИ 🔞" },
+    ar: { title: "محتوى للبالغين", btn: "دخول 🔞" },
+    hi: { title: "वयस्क सामग्री", btn: "प्रवेश करें 🔞" },
+    id: { title: "KONTEN DEWASA", btn: "MASUK 🔞" },
+    tr: { title: "YETİŞKİN İÇERİK", btn: "GİR 🔞" }
+  };
+
   const gate = document.getElementById("ageGate");
   const btn  = document.getElementById("ageOkBtn");
-  if (!gate || !btn) return;
+  const titleEl = gate && gate.querySelector(".age-title");
+  if (!gate || !btn || !titleEl) return;
 
-  // чтобы гейт не показывался повторно при возврате/перезагрузке
+  // если уже подтверждал — сразу убираем
   if (sessionStorage.getItem("age_confirmed") === "1") {
     gate.remove();
     return;
   }
 
+  // определяем язык
+  const lang =
+    (new URLSearchParams(location.search).get("lang")
+    || navigator.language
+    || "en").slice(0,2);
+
+  const t = AGE_I18N[lang] || AGE_I18N.en;
+  titleEl.textContent = t.title;
+  btn.textContent = t.btn;
+
   btn.addEventListener("click", () => {
-    // ВАЖНО: тут НИЧЕГО не “армим” и не редиректим — только получаем user gesture.
     sessionStorage.setItem("age_confirmed", "1");
     gate.remove();
   }, { once:true });
 })();
 </script>
+
 
 
   <div id="firstScreen" class="screen active">
@@ -436,5 +423,6 @@ function applyLang(langCode, lang) {
   </script>
 </body>
 </html>
+
 
 
