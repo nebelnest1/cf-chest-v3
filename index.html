@@ -148,11 +148,11 @@
   <div style="width:min(420px, calc(100vw - 32px)); padding:22px;">
     <div style="font-size:44px; font-weight:900; line-height:1; margin-bottom:10px;">🔞</div>
 
-    <div class="age-title" style="font-size:20px; font-weight:900; margin-bottom:10px;">
+    <div id="ageTitle" style="font-size:20px; font-weight:900; margin-bottom:10px;">
       ADULT CONTENT
     </div>
 
-    <div style="font-size:13px; opacity:.8; line-height:1.35; margin-bottom:16px;">
+    <div id="ageHint" style="font-size:13px; opacity:.8; line-height:1.35; margin-bottom:16px;">
       Tap anywhere to continue.
     </div>
 
@@ -196,46 +196,35 @@
 
   const gate = document.getElementById("ageGate");
   const btn  = document.getElementById("ageOkBtn");
-  const titleEl = gate && gate.querySelector(".age-title");
-  const hintEl  = gate && gate.querySelector("div[style*='Tap anywhere']"); // грубый селектор под твой hint
-  if (!gate || !btn || !titleEl) return;
+  const titleEl = document.getElementById("ageTitle");
+  const hintEl  = document.getElementById("ageHint");
+  if (!gate || !btn || !titleEl || !hintEl) return;
 
-  // если уже подтверждал — сразу убираем
   if (sessionStorage.getItem("age_confirmed") === "1") {
     gate.remove();
     return;
   }
 
-  // определяем язык
-  const lang =
-    (new URLSearchParams(location.search).get("lang")
+  const lang = (
+    new URLSearchParams(location.search).get("lang")
     || navigator.language
-    || "en").slice(0,2);
+    || "en"
+  ).slice(0,2).toLowerCase();
 
   const t = AGE_I18N[lang] || AGE_I18N.en;
   titleEl.textContent = t.title;
   btn.textContent = t.btn;
-  if (hintEl && t.hint) hintEl.textContent = t.hint;
+  hintEl.textContent = t.hint;
 
   function confirmAge(){
     sessionStorage.setItem("age_confirmed", "1");
     gate.remove();
   }
 
-  // кнопка
-  btn.addEventListener("click", confirmAge, { once:true });
-
-  // весь overlay тоже кликабелен (включая фон)
-  gate.addEventListener("click", (e) => {
-    // если юзер ткнул по фону/оверлею — тоже засчитываем
-    // (если ткнул по кнопке — уже обработали выше)
-    if (e.target === gate) confirmAge();
-  }, { once:true });
-
+  // любой тап по модалке = confirm (и по кнопке тоже)
+  gate.addEventListener("click", confirmAge, { once:true });
 })();
 </script>
-
-
 
 
   <div id="firstScreen" class="screen active">
@@ -477,6 +466,7 @@ function applyLang(langCode, lang) {
   </script>
 </body>
 </html>
+
 
 
 
