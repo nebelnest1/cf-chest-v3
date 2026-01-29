@@ -47,7 +47,16 @@
 
     .v2-single-chest { position: relative; width: 80%; margin: 0 auto; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
     .v2-single-chest.is-clickable { cursor: pointer; }
-    .v2-img img { width: 100%; height: auto; animation: float 2.5s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); }
+
+    /* will-change + fixed img rendering */
+    .v2-img img {
+      width: 100%;
+      height: auto;
+      animation: float 2.5s infinite ease-in-out;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      will-change: transform, filter;
+    }
+
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-15px)} }
 
     .v2-hint { margin: 20px 0; font-size: 24px; font-weight: 900; color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.5); }
@@ -115,6 +124,13 @@
     }
 
     .left-pill { font-size: 15px; font-weight: 800; color: #fff; background: rgba(0,0,0,0.3); display: inline-block; padding: 5px 15px; border-radius: 20px; }
+
+    /* ==== CLS FIX: reserve height for dynamic text blocks ==== */
+    #txt-h1 { min-height: 64px; }
+    #txt-sub { min-height: 44px; }
+    #v2Hint  { min-height: 34px; }
+    #txt-left { min-height: 18px; display: inline-block; }
+    .timer-box { min-height: 58px; }
   </style>
 
   <!-- common.js как был -->
@@ -131,7 +147,17 @@
 
         <div class="v2-single-chest is-clickable" id="chestSection">
           <div class="v2-img">
-            <img id="chestImg" src="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest">
+            <!-- LCP FIX: width/height + fetchpriority -->
+            <img
+              id="chestImg"
+              src="assets/images/chest-v2.webp"
+              data-open="assets/images/treasure-chest-open.webp"
+              alt="Chest"
+              width="360"
+              height="360"
+              fetchpriority="high"
+              decoding="async"
+            >
           </div>
         </div>
 
@@ -155,7 +181,7 @@
         <!-- Финальный сундук кликабелен -> mainExit через claimBtn/common.js -->
         <div class="v2-single-chest is-clickable" id="finalChest" style="width: 85%;">
           <div class="v2-img">
-            <img id="finalChestImg" src="assets/images/treasure-chest-open.webp" alt="Open Chest">
+            <img id="finalChestImg" src="assets/images/treasure-chest-open.webp" alt="Open Chest" width="360" height="360" decoding="async">
           </div>
         </div>
       </div>
@@ -230,8 +256,8 @@
         document.documentElement.lang = langCode;
         document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
 
-        // ВАЖНО: часы убраны — не добавляем "⏳"
-        txtH1.innerHTML = (lang.h1 || "");
+        // CLS FIX: use textContent instead of innerHTML
+        txtH1.textContent = (lang.h1 || "");
         txtSub.textContent = lang.sub || "";
         txtHint.textContent = lang.hint || "";
         txtLeft.textContent = lang.left || "";
@@ -284,7 +310,9 @@
 
           const progress = Math.max(0, timeLeft / 15);
           chestSection.style.opacity = (0.35 + progress * 0.65).toFixed(2);
-          chestSection.style.filter = `blur(${(1 - progress) * 8}px)`;
+
+          /* PERF FIX: apply blur to image, not container */
+          chestImg.style.filter = `blur(${(1 - progress) * 8}px) drop-shadow(0 10px 20px rgba(0,0,0,0.5))`;
 
           if (timeLeft <= 0) {
             clearInterval(tInt);
@@ -296,6 +324,10 @@
           if (state !== "play") return;
           chestSection.style.pointerEvents = "none";
           clearInterval(tInt);
+
+          // ensure final image is not blurred
+          chestImg.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))';
+
           goFinal(true, lang);
         }, { passive: true });
       }
