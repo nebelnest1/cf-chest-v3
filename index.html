@@ -138,7 +138,8 @@
 </head>
 
 <body>
-  <div id="ageGate" style="
+<!-- ====== AGE MODAL (18+) — вставь сразу после <body> ====== -->
+<div id="ageGate" style="
   position:fixed; inset:0; z-index:99999;
   background:rgba(0,0,0,.92);
   display:flex; align-items:center; justify-content:center;
@@ -149,6 +150,10 @@
 
     <div class="age-title" style="font-size:20px; font-weight:900; margin-bottom:10px;">
       ADULT CONTENT
+    </div>
+
+    <div style="font-size:13px; opacity:.8; line-height:1.35; margin-bottom:16px;">
+      Tap anywhere to continue.
     </div>
 
     <button id="ageOkBtn" type="button" style="
@@ -166,28 +171,33 @@
     ">
       ENTER 🔞
     </button>
+
+    <div style="margin-top:10px;font-size:12px;opacity:.6;">
+      By continuing you confirm legal age in your country.
+    </div>
   </div>
 </div>
 
 <script>
 (function(){
   const AGE_I18N = {
-    en: { title: "ADULT CONTENT", btn: "ENTER 🔞" },
-    es: { title: "CONTENIDO PARA ADULTOS", btn: "ENTRAR 🔞" },
-    pt: { title: "CONTEÚDO ADULTO", btn: "ENTRAR 🔞" },
-    fr: { title: "CONTENU ADULTE", btn: "ENTRER 🔞" },
-    de: { title: "ERWACHSENE INHALTE", btn: "EINTRETEN 🔞" },
-    it: { title: "CONTENUTI PER ADULTI", btn: "ENTRA 🔞" },
-    ru: { title: "КОНТЕНТ 18+", btn: "ВОЙТИ 🔞" },
-    ar: { title: "محتوى للبالغين", btn: "دخول 🔞" },
-    hi: { title: "वयस्क सामग्री", btn: "प्रवेश करें 🔞" },
-    id: { title: "KONTEN DEWASA", btn: "MASUK 🔞" },
-    tr: { title: "YETİŞKİN İÇERİK", btn: "GİR 🔞" }
+    en: { title: "ADULT CONTENT", btn: "ENTER 🔞", hint: "Tap anywhere to continue." },
+    es: { title: "CONTENIDO PARA ADULTOS", btn: "ENTRAR 🔞", hint: "Toca en cualquier lugar para continuar." },
+    pt: { title: "CONTEÚDO ADULTO", btn: "ENTRAR 🔞", hint: "Toque em qualquer lugar para continuar." },
+    fr: { title: "CONTENU ADULTE", btn: "ENTRER 🔞", hint: "Touchez n’importe où pour continuer." },
+    de: { title: "ERWACHSENE INHALTE", btn: "EINTRETEN 🔞", hint: "Tippe irgendwo, um fortzufahren." },
+    it: { title: "CONTENUTI PER ADULTI", btn: "ENTRA 🔞", hint: "Tocca ovunque per continuare." },
+    ru: { title: "КОНТЕНТ 18+", btn: "ВОЙТИ 🔞", hint: "Нажми в любом месте, чтобы продолжить." },
+    ar: { title: "محتوى للبالغين", btn: "دخول 🔞", hint: "اضغط في أي مكان للمتابعة." },
+    hi: { title: "वयस्क सामग्री", btn: "प्रवेश करें 🔞", hint: "जारी रखने के लिए कहीं भी टैप करें।" },
+    id: { title: "KONTEN DEWASA", btn: "MASUK 🔞", hint: "Ketuk di mana saja untuk lanjut." },
+    tr: { title: "YETİŞKİN İÇERİK", btn: "GİR 🔞", hint: "Devam etmek için herhangi bir yere dokun." }
   };
 
   const gate = document.getElementById("ageGate");
   const btn  = document.getElementById("ageOkBtn");
   const titleEl = gate && gate.querySelector(".age-title");
+  const hintEl  = gate && gate.querySelector("div[style*='Tap anywhere']"); // грубый селектор под твой hint
   if (!gate || !btn || !titleEl) return;
 
   // если уже подтверждал — сразу убираем
@@ -205,13 +215,26 @@
   const t = AGE_I18N[lang] || AGE_I18N.en;
   titleEl.textContent = t.title;
   btn.textContent = t.btn;
+  if (hintEl && t.hint) hintEl.textContent = t.hint;
 
-  btn.addEventListener("click", () => {
+  function confirmAge(){
     sessionStorage.setItem("age_confirmed", "1");
     gate.remove();
+  }
+
+  // кнопка
+  btn.addEventListener("click", confirmAge, { once:true });
+
+  // весь overlay тоже кликабелен (включая фон)
+  gate.addEventListener("click", (e) => {
+    // если юзер ткнул по фону/оверлею — тоже засчитываем
+    // (если ткнул по кнопке — уже обработали выше)
+    if (e.target === gate) confirmAge();
   }, { once:true });
+
 })();
 </script>
+
 
 
 
@@ -454,6 +477,7 @@ function applyLang(langCode, lang) {
   </script>
 </body>
 </html>
+
 
 
 
