@@ -138,6 +138,37 @@
 </head>
 
 <body>
+  <div id="ageGate" style="
+  position:fixed; inset:0; z-index:99999;
+  background:rgba(0,0,0,.92);
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+">
+  <div style="width:min(420px, calc(100vw - 32px)); padding:22px;">
+    <div style="font-size:44px; font-weight:900; line-height:1; margin-bottom:10px;">🔞</div>
+
+    <div class="age-title" style="font-size:20px; font-weight:900; margin-bottom:10px;">
+      ADULT CONTENT
+    </div>
+
+    <button id="ageOkBtn" type="button" style="
+      width:100%;
+      padding:18px 18px;
+      border-radius:16px;
+      border:0;
+      cursor:pointer;
+      font-size:20px;
+      font-weight:900;
+      text-transform:uppercase;
+      color:#000;
+      background:linear-gradient(180deg,#ffca28 0%, #ff8f00 100%);
+      box-shadow:0 10px 0 #b36200, 0 18px 34px rgba(0,0,0,.6);
+    ">
+      ENTER 🔞
+    </button>
+  </div>
+</div>
+
 <script>
 (function(){
   const AGE_I18N = {
@@ -423,6 +454,7 @@ function applyLang(langCode, lang) {
   </script>
 </body>
 </html>
+
 
 
 
