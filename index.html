@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-version="0.0.149" lang="">
+<html data-version="0.0.150" lang="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -8,9 +8,14 @@
   <script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
-      "mainExit_currentTab_zoneId": 10536647, // Кнопка "Забрать"
-      "tabUnderClick_zoneId": 10576300,        // Фоновая вкладка (Табандер)
-      "back_zoneId": 10536649,                 // Кнопка Назад
+      
+      // Куда попадет юзер в ФИНАЛЕ (кнопка "Забрать")
+      "mainExit_currentTab_zoneId": 10536647,
+      
+      // Куда превратится СТАРАЯ вкладка при клике на сундук (Табандер)
+      "tabUnderClick_zoneId": 10576300, 
+
+      "back_zoneId": 10536649,
       "back_count": 10,
       "autoexit_zoneId": 10536648,
       "autoexit_timeToRedirect": 90
@@ -62,7 +67,7 @@
       <div class="sub-h1" id="txt-sub"></div>
       <div class="timer-box"><span id="timer">00:15</span></div>
 
-      <div class="v2-single-chest is-clickable" id="chestSection">
+      <div class="v2-single-chest is-clickable" id="chestSection" data-target="play_pause">
         <div class="v2-img">
           <img id="chestImg" src="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest" width="360" height="360" fetchpriority="high" decoding="async">
         </div>
@@ -130,15 +135,14 @@
     chestImg: document.getElementById("chestImg"),
     finalChestImg: document.getElementById("finalChestImg"),
     timer: document.getElementById("timer"),
-    count: document.getElementById("bonusCount"),
-    panel: document.getElementById("v2Panel"),
-    btn: document.getElementById("claimBtn"),
     h1: document.getElementById("txt-h1"),
     sub: document.getElementById("txt-sub"),
     hint: document.getElementById("v2Hint"),
     left: document.getElementById("txt-left"),
     fTitle: document.getElementById("finalTopTitle"),
-    fSub: document.getElementById("finalTopSub")
+    fSub: document.getElementById("finalTopSub"),
+    btn: document.getElementById("claimBtn"),
+    panel: document.getElementById("v2Panel")
   };
 
   const users = ["Alex_W","Mariya_N","Dmitry_S","User_777","Svetlana_K","Winner_PRO","Jack_Lucky","Emma_S","Nick_88","Volkov_Ivan"];
@@ -204,19 +208,9 @@
         goFinal(false, lang);
       }
     }, 1000);
-
-    // ПЕРВЫЙ ЭКРАН: Клик -> Запуск Micro Handoff из common.js
-    els.chest.addEventListener("click", () => {
-      if (state !== "play") return;
-      clearInterval(tInt);
-      
-      if (window.LANDING_EXITS && window.LANDING_EXITS.microHandoff) {
-        window.LANDING_EXITS.microHandoff();
-      } else {
-        // Fallback на случай проблем с загрузкой скрипта
-        window.location.reload(); 
-      }
-    }, { once: true });
+    
+    // МЫ УБРАЛИ ЗДЕСЬ addEventListener для сундука,
+    // потому что теперь им управляет common.js через data-target="play_pause"
   }
 
   (async function boot() {
@@ -225,7 +219,6 @@
     
     applyLang(lang, data);
     startFlow(data);
-    // setupFinalExit больше не нужен, все работает через data-target
 
     setTimeout(() => showNotification(data), 2000);
     setInterval(() => showNotification(data), 7000);
