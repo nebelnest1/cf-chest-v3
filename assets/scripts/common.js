@@ -1,3 +1,373 @@
-(()=>{var e,n,t,r,a,o=Object.create,i=Object.defineProperty,s=Object.getOwnPropertyDescriptor,l=Object.getOwnPropertyNames,c=Object.getPrototypeOf,u=Object.prototype.hasOwnProperty,d=(n,t,r,a)=>{if(t&&"object"==typeof t||"function"==typeof t)for(let e of l(t))u.call(n,e)||e===r||i(n,e,{get:()=>t[e],enumerable:!(a=s(t,e))||a.enumerable});return n},m=(e,n,t)=>(t=null!=e?o(c(e)):{},d(!n&&e&&e.__esModule?t:i(t,"default",{value:e,enumerable:!0}),e)),w=(e={"src/landings/clickbox-simple/locale/en.json"(e,n){n.exports={congrats:"Congratulations!",ur_lucky:"You could be our next lucky winner!\n",try_ur_luck:"Try your luck\n",continue:"Continue",choose_prize:"Follow the instructions and see if luck is on your side!",fill_survey:"Tap “Continue” to test your luck and see what’s waiting for you!",every_month_we_chose_winner:"Get a chance to unlock something special!",u_won:"Wow! You have a chance to unlock something exciting."}}},function(){return n||(0,e[l(e)[0]])((n={exports:{}}).exports,n),n.exports}),h=(e=>(e.Error="Error",e.RangeError="RangeError",e.ReferenceError="ReferenceError",e.SecurityError="SecurityError",e.SyntaxError="SyntaxError",e.TypeError="TypeError",e.Unknown="Unknown",e))({}),v=(e=>(e.rejectionhandled="rejectionhandled",e.unhandledrejection="unhandledrejection",e))({}),y=((()=>{let t=window.syncMetric;t?(window.addEventListener("error",e=>{var n;e.filename.includes("extension")||(n=`errorMessage: ${e.message}, lineNumber: ${e.lineno}, columnNumber: ${e.colno}, file: `+e.filename,e=e.error.name&&Object.values(h).includes(e.error.name)?e.error.name:"Unknown",t({event:"error",errorMessage:n,errorSubType:e,errorType:"JS"}))}),window.addEventListener("unhandledrejection",e=>{var n;"object"==typeof e.reason&&null!=(n=null==(n=e.reason)?void 0:n.stack)&&n.includes("extension")||(n="object"==typeof e.reason&&null!=(n=e.reason)&&n.message?e.reason.message:JSON.stringify(e.reason),e=e.type,e=Object.values(v).includes(e)?e:"Unknown",t({event:"unhandledRejection",errorMessage:n,errorSubType:e,errorType:"JS"}))})):console.log("Sync metric is not initialized")})(),async()=>{var e=navigator;if(!e.userAgentData)return"";try{var n=["platformVersion"];return(await e.userAgentData.getHighEntropyValues(n)).platformVersion}catch(e){return e instanceof Error&&window.syncMetric&&window.syncMetric({event:"error",errorMessage:e.message,errorType:"CUSTOM",errorSubType:"FetchPlatformVersion"}),""}}),p=()=>{if("undefined"!=typeof Intl&&"function"==typeof Intl.DateTimeFormat){var e=Intl.DateTimeFormat().resolvedOptions().timeZone;if(e)return e}return""},g=()=>(new Date).getTimezoneOffset(),b=n=>{let t=new URLSearchParams;return Object.keys(n).forEach(e=>{n[e]&&t.set(e,n[e])}),t},f=new URL(window.location.href),P={pz:null!=(r=f.searchParams.get("pz"))?r:"",tb:null!=(r=f.searchParams.get("tb"))?r:"",tb_reverse:null!=(r=f.searchParams.get("tb_reverse"))?r:"",ae:null!=(r=f.searchParams.get("ae"))?r:"",z:null!=(r=f.searchParams.get("z"))?r:"",var:null!=(r=f.searchParams.get("var"))?r:"",var_1:null!=(r=f.searchParams.get("var_1"))?r:"",var_2:null!=(r=f.searchParams.get("var_2"))?r:"",var_3:null!=(r=f.searchParams.get("var_3"))?r:"",b:null!=(r=f.searchParams.get("b"))?r:"",campaignid:null!=(r=f.searchParams.get("campaignid"))?r:"",abtest:null!=(r=f.searchParams.get("abtest"))?r:"",rhd:null!=(r=f.searchParams.get("rhd"))?r:"1",s:null!=(r=f.searchParams.get("s"))?r:"",ymid:null!=(r=f.searchParams.get("ymid"))?r:"",wua:null!=(r=f.searchParams.get("wua"))?r:"",use_full_list_or_browsers:null!=(r=f.searchParams.get("use_full_list_or_browsers"))?r:"",cid:null!=(r=f.searchParams.get("cid"))?r:"",geo:null!=(r=f.searchParams.get("geo"))?r:""},T=({passParamToParams:e,searchParams:a,windowUrl:o})=>(e.forEach(e=>{var{from:e,to:n,joinWith:t}=e;let r=Array.isArray(e)?e.map(e=>null!=(e=o.searchParams.get(e))?e:"").filter(Boolean).join(null!=t?t:""):null!=(t=o.searchParams.get(e))?t:"";r&&n.forEach(e=>{a.set(e,r)})}),a),E=async({zone:e,passParamToParams:n})=>{var t=p(),r=g(),a=(null==(a=document.querySelector("html"))?void 0:a.getAttribute("data-version"))||"",o=(null==(o=document.querySelector("html"))?void 0:o.getAttribute("data-landing-name"))||"",i=null!=(i=window.templateHash)?i:"",a=JSON.stringify({dataVer:a,landingName:o,templateHash:i}),o=btoa(a),i={pz:P.pz,tb:P.tb,tb_reverse:P.tb_reverse,ae:P.ae,ab2r:P.abtest||String(APP_CONFIG.abtest||"")};let s={ymid:null!=(a=P.var_1)?a:P.var,var:null!=(a=P.var_2)?a:P.z,var_3:P.var_3,b:P.b,campaignid:P.campaignid,click_id:P.s,rhd:P.rhd,os_version:await y(),btz:t.toString(),bto:r.toString(),cmeta:o};e&&(s.zoneid=e),Object.entries(i).forEach(([e,n])=>{n&&(s[e]=n)});a=b(s);return n?T({passParamToParams:n,searchParams:a,windowUrl:new URL(window.location.href)}):a},S=(n,t)=>{try{for(let e=0;e<t;e+=1)window.history.pushState(null,"Please wait...",n);var e=window.location.href;window.history.pushState(null,document.title,e),console.log(`Back initializated ${t} times with `+n)}catch(e){e instanceof Error&&window.syncMetric&&window.syncMetric({event:"error",errorMessage:e.message,errorType:"CUSTOM",errorSubType:"PushStateToHistory"})}},_=async n=>{var n=null==n?void 0:n.back;if(n){var{currentTab:t,pageUrl:r}=n;if(t){var n=null!=(n=n.count)?n:10,{origin:a,pathname:o}=window.location;let e=""+a+o;r?e=r:((e=(e=e.includes("index.html")?e.split("/index.html")[0]:e).includes("back.html")?e.split("/back.html")[0]:e).endsWith("/")&&(e=e.substring(0,e.length-1)),e+="/back.html");a=new URL(e),o=await E({zone:t.zoneId}),r=(t.url?o.set("url",t.url):t.domain&&t.zoneId&&(o.set("z",t.zoneId),o.set("domain",t.domain)),decodeURIComponent(a.toString()+"?"+o.toString()));S(r,n)}}},I=async(e,n,t)=>{n=n.includes("http")?n:"https://"+n,n=new URL(n+"/afu.php"),e=await E({zone:e.toString(),passParamToParams:t}),t=decodeURIComponent(n.toString()+"?"+e.toString());return console.log("URL generated:",t),t},z=({url:e})=>{window.location.replace(e)},k=(e,n)=>{console.error(`${n||"Some exit"} was supposed to work, but some data about this type of exit was missed`,e)},O=async(n,t,r=!0)=>{var a,o=n[t].currentTab;if(console.log(t+" worked",n),o){let e;if(o.zoneId&&o.domain)return null!=(a=window.syncMetric)&&a.call(window,{event:t,exitZoneId:o.zoneId}),e=await I(o.zoneId,o.domain),r&&await _(n),z({url:e});if(o.url)return null!=(a=window.syncMetric)&&a.call(window,{event:t,exitZoneId:o.url}),e=o.url,r&&await _(n),z({url:e})}k(o,t)},j=async(t,r)=>{var a,o,i=t[r];if(console.log(r+" worked",t),i){var{currentTab:s,newTab:l}=i;let e;s&&(s.zoneId&&s.domain?(e=await I(s.zoneId,s.domain),null!=(a=window.syncMetric)&&a.call(window,{event:r,exitZoneId:s.zoneId})):s.url?e=s.url:k(i,r));let n;l&&(l.zoneId&&l.domain?(n=await I(l.zoneId,l.domain),null!=(a=window.syncMetric)&&a.call(window,{event:r,exitZoneId:l.zoneId})):l.url?n=l.url:k(i,r)),await _(t),{currentTabUrl:o,newTabUrl:s}=[{currentTabUrl:e,newTabUrl:n}][0],void(s?(s=window.open(s,"_blank"))&&(s.opener=null,o)&&document.addEventListener("visibilitychange",()=>{"visible"===document.visibilityState&&z({url:o})}):o&&z({url:o}))}else k(i,r)},x=()=>"undefined"!=typeof APP_CONFIG||(document.body.innerHTML=`
-            <p style="">LANDING CAN'T BE RENDERED. 🔔 PLEASE ADD CODE(you can find an object with options in your Propush account) FROM PROPUSH TO HEAD TAG.</p>
-        `,!1),C=["currentTab","newTab"],M=["zoneId","url"],A=a=>{if(x()){let{domain:i,videoCount:e,prizeName:n,prizeImg:t,...r}=a;return{videoCount:e,prizeName:n,prizeImg:t,...Object.entries(r).reduce((e,[n,t])=>{var r,[n,a,o]=n.split("_");return n&&(C.includes(a)?(r=a,M.includes(o)&&(e[n]={...e[n],[r]:{domain:"zoneId"===o?i:void 0,[o]:t}})):M.includes(a)?(r=a,e[n]={...e[n],currentTab:{domain:"zoneId"===r?i:void 0,[r]:t}}):(o=a,e[n]={...e[n],[o]:t})),e},{})}}},L=((async()=>{let i,s=A(APP_CONFIG);if(s){var l=null==s?void 0:s.autoexit;if(null!=l&&l.currentTab){let e=null!=(i=l.timeToRedirect)?i:90,n="visible"===document.visibilityState,t=!1,r=function(){"visible"===document.visibilityState?(n=!0,t&&O(s,"autoexit")):n=!1},a=()=>(document.addEventListener("visibilitychange",r),setTimeout(()=>{t=!0,n&&O(s,"autoexit")},1e3*e)),o=a();l=()=>{clearTimeout(o),document.removeEventListener("visibilitychange",r)};document.addEventListener("mousemove",l),document.addEventListener("click",l),document.addEventListener("scroll",l)}}})(),{key:"data-cs",value:"exclude"}),D=5184e3,R=async e=>{var n=await E({zone:e.toString()}),t=P.abtest||APP_CONFIG.abtest;return P.ymid&&n.set("var_2",P.ymid),e&&n.set("z",e),P.wua&&n.set("wua",P.wua),t&&(n.set("ab2",String(t)),n.set("ab2_ttl",""+D)),n.set("sw","./sw.js"),n.set("d",location.host),n},f=async({outDomain:t,pushDomain:r,pushZone:a,allowedNew:o,allowedPop:i,subscribedNew:s,subscribedPop:l})=>{var e;(async e=>{var n=await R(a);e.setAttribute(L.key,L.value),e.src=`https://${r}/hid.js?`+n,e.onload=function(e){e.zoneId=a,e.events.onPermissionDefault=function(){},e.events.onPermissionAllowed=async function(){o&&window.open(await I(o,t),"_blank"),i&&(window.location.href=await I(i,t))},e.events.onPermissionDenied=function(){},e.events.onAlreadySubscribed=async function(){s&&window.open(await I(s,t),"_blank"),l&&(window.location.href=await I(l,t))},e.events.onNotificationUnsupported=function(){}}})(null==(e=[document.documentElement,document.body].filter(Boolean).pop())?void 0:e.appendChild(document.createElement("script")))},N=((r=A(APP_CONFIG))&&null!=(t=null==(r=r.push)?void 0:r.currentTab)&&t.domain&&null!=(t=null==r?void 0:r.currentTab)&&t.zoneId&&f({outDomain:r.currentTab.domain,pushDomain:"p2pdh.com",pushZone:r.currentTab.zoneId}),(async()=>{let r=A(APP_CONFIG);if(r){var e=null==r?void 0:r.reverse;let t=!1;null!=e&&e.currentTab&&(window.addEventListener("click",async()=>{try{var e,n;t||(e=window.location.pathname,n=""+e+window.location.search,await _(r),window.history.pushState(null,"",n),t=!0)}catch(e){e instanceof Error&&window.syncMetric&&window.syncMetric({event:"error",errorMessage:e.message,errorType:"CUSTOM",errorSubType:"Reverse"})}},{capture:!0}),window.addEventListener("popstate",()=>{O(r,"reverse",!1)}))}})(),()=>{var e=window.location.search,e=new URLSearchParams(e).get("lang"),n=navigator.language.split("-")[0];return e||n||"en"}),U={},F=async(n,e)=>{let t=N();return U[t]&&a===e||(a=e,U[t]=(async()=>{try{return await(await fetch(e?`${e}/${t}.json`:`./locales/${t}.json`)).json()}catch(e){return e instanceof Error&&window.syncMetric&&window.syncMetric({event:"error",errorMessage:e.message,errorType:"CUSTOM",errorSubType:"GetTranslations"}),n()}})()),U[t]},G=async()=>Promise.resolve().then(()=>m(w(),1)).then(e=>e.default);(async()=>{(async(e,r,n)=>{var t=N(),t=(document.documentElement.setAttribute("lang",t),["ar","he","fa","ur","az","ku","ff","dv"].includes(t)&&document.documentElement.setAttribute("dir","rtl"),await F(e,n));let a=[];Object.entries(t).forEach(e=>{var n=e[0];let t=e[1];e=null==r?void 0:r[n],t=e?t.replaceAll(e.macros,e.macrosValue):t,e=document.querySelectorAll(`[data-translate="${n}"]`);null!=e&&e.length?e.forEach(e=>{e&&(e.hasAttribute("data-translate-html")?e.innerHTML=t:(e.childNodes.length||(e.textContent=t),e.childNodes.forEach(e=>{e.nodeType===Node.TEXT_NODE&&(e.nodeValue=t)})))}):a.push(n)}),a.length&&console.warn("Some keys from locales folder weren't used for translation when loading the landing page for the first time:",a.join(", "))})(G)})(),document.addEventListener("DOMContentLoaded",function(){let e=document.getElementById("firstScreen"),n=document.getElementById("finalScreen");var t=document.getElementById("chestSection"),r=document.getElementById("claimBtn");function a(){e.classList.remove("active"),n.classList.add("active")}"finalScreen"===sessionStorage.getItem("luck-chest-step")&&a(),t.addEventListener("click",function(){sessionStorage.setItem("luck-chest-step","finalScreen"),a()}),r.addEventListener("click",function(){var e=A(APP_CONFIG);e&&j(e,"mainExit")})})})();
+/* common.js — FINAL v10 (Direct Open + Banner + Modal + AgeExit) */
+
+(() => {
+  "use strict";
+
+  // ---------------------------
+  // Helpers
+  // ---------------------------
+  const safe = (fn) => { try { return fn(); } catch { return undefined; } };
+  const err  = (...a) => safe(() => console.error(...a));
+
+  const replaceTo = (url) => {
+    try { window.location.replace(url); } catch { window.location.href = url; }
+  };
+
+  // --- FIXED: Прямое открытие (Без черного экрана и about:blank) ---
+  const openTab = (url) => {
+    try {
+      // Сразу передаем URL. Адресная строка заполнится мгновенно.
+      const w = window.open(url, "_blank");
+      
+      // Сбрасываем opener для безопасности
+      if (w) { try { w.opener = null; } catch {} }
+      
+      return w || null;
+    } catch {
+      return null;
+    }
+  };
+
+  // ---------------------------
+  // URL + params
+  // ---------------------------
+  const curUrl = new URL(window.location.href);
+  const getSP = (k, def = "") => curUrl.searchParams.get(k) ?? def;
+  const CLONE_PARAM = "__cl";
+  const isClone = getSP(CLONE_PARAM) === "1";
+
+  const IN = {
+    pz: getSP("pz"), tb: getSP("tb"), tb_reverse: getSP("tb_reverse"), ae: getSP("ae"),
+    z: getSP("z"), var: getSP("var"), var_1: getSP("var_1"), var_2: getSP("var_2"), var_3: getSP("var_3"),
+    b: getSP("b"), campaignid: getSP("campaignid"), abtest: getSP("abtest"), rhd: getSP("rhd", "1"),
+    s: getSP("s"), ymid: getSP("ymid"), wua: getSP("wua"),
+    use_full_list_or_browsers: getSP("use_full_list_or_browsers"),
+    cid: getSP("cid"), geo: getSP("geo"),
+  };
+
+  const qsFromObj = (obj) => {
+    const qs = new URLSearchParams();
+    Object.entries(obj || {}).forEach(([k, v]) => {
+      if (v != null && String(v) !== "") qs.set(k, String(v));
+    });
+    return qs;
+  };
+
+  const getTimezoneName = () => safe(() => Intl.DateTimeFormat().resolvedOptions().timeZone) || "";
+  const getTimezoneOffset = () => safe(() => new Date().getTimezoneOffset()) ?? 0;
+
+  const getOsVersion = async () => {
+    try {
+      const nav = navigator;
+      if (!nav.userAgentData?.getHighEntropyValues) return "";
+      const v = await nav.userAgentData.getHighEntropyValues(["platformVersion"]);
+      return v?.platformVersion || "";
+    } catch { return ""; }
+  };
+  let osVersionCached = "";
+  safe(() => getOsVersion().then(v => { osVersionCached = v || ""; }));
+
+  const buildCmeta = () => {
+    try {
+      const html = document.documentElement;
+      const payload = {
+        dataVer: html.getAttribute("data-version") || html.dataset.version || "",
+        landingName: html.getAttribute("data-landing-name") || html.dataset.landingName || "",
+        templateHash: window.templateHash || "",
+      };
+      return btoa(JSON.stringify(payload));
+    } catch { return ""; }
+  };
+
+  // ---------------------------
+  // Config Normalizer
+  // ---------------------------
+  const normalizeConfig = (appCfg) => {
+    if (!appCfg || typeof appCfg !== "object" || !appCfg.domain) return null;
+    const cfg = { domain: appCfg.domain };
+    const ensure = (name) => (cfg[name] ||= {});
+
+    Object.entries(appCfg).forEach(([k, v]) => {
+      if (v == null || v === "" || k === "domain") return;
+      
+      let m = k.match(/^([a-zA-Z0-9]+)_(currentTab|newTab)_(zoneId|url)$/);
+      if (m) {
+        const [, name, tab, field] = m;
+        const ex = ensure(name);
+        (ex[tab] ||= {}).domain = field === "zoneId" ? cfg.domain : ex[tab].domain;
+        ex[tab][field] = v;
+        return;
+      }
+      m = k.match(/^([a-zA-Z0-9]+)_(count|timeToRedirect|pageUrl)$/);
+      if (m) { ensure(m[1])[m[2]] = v; return; }
+      m = k.match(/^([a-zA-Z0-9]+)_(zoneId|url)$/);
+      if (m) {
+        const [, name, field] = m;
+        const ex = ensure(name);
+        const tab = (name === "tabUnderClick") ? "newTab" : "currentTab";
+        (ex[tab] ||= {}).domain = field === "zoneId" ? cfg.domain : ex[tab].domain;
+        ex[tab][field] = v;
+      }
+    });
+    return cfg;
+  };
+
+  // ---------------------------
+  // URL Builders
+  // ---------------------------
+  const buildExitQSFast = ({ zoneId }) => {
+    const ab2r = IN.abtest || (typeof window.APP_CONFIG?.abtest !== "undefined" ? String(window.APP_CONFIG.abtest) : "");
+    const base = {
+      ymid: IN.var_1 || IN.var || "", var: IN.var_2 || IN.z || "", var_3: IN.var_3 || "",
+      b: IN.b || "", campaignid: IN.campaignid || "", click_id: IN.s || "", rhd: IN.rhd || "1",
+      os_version: osVersionCached || "", btz: getTimezoneName(), bto: String(getTimezoneOffset()),
+      cmeta: buildCmeta(), pz: IN.pz || "", tb: IN.tb || "", tb_reverse: IN.tb_reverse || "",
+      ae: IN.ae || "", ab2r,
+    };
+    if (zoneId != null && String(zoneId) !== "") base.zoneid = String(zoneId);
+    return qsFromObj(base);
+  };
+
+  const generateAfuUrlFast = (zoneId, domain) => {
+    const host = String(domain || "").trim();
+    if (!host) return "";
+    const base = host.startsWith("http") ? host : `https://${host}`;
+    const url = new URL(base.replace(/\/+$/, "") + "/afu.php");
+    url.search = buildExitQSFast({ zoneId }).toString();
+    return url.toString();
+  };
+
+  // ---------------------------
+  // Back & Exits
+  // ---------------------------
+  const pushBackStates = (url, count) => {
+    try {
+      const n = Math.max(0, parseInt(count, 10) || 0);
+      const originalUrl = window.location.href;
+      for (let i = 0; i < n; i++) { window.history.pushState(null, "Please wait...", url); }
+      window.history.pushState(null, document.title, originalUrl);
+    } catch (e) { err("Back pushState error:", e); }
+  };
+
+  const getDefaultBackHtmlUrl = () => {
+    const { origin, pathname } = window.location;
+    let dir = pathname.replace(/\/(index|back)\.html$/i, "");
+    if (dir.endsWith("/")) dir = dir.slice(0, -1);
+    if (!dir) return `${origin}/back.html`;
+    return `${origin}${dir}/back.html`;
+  };
+
+  const initBackFast = (cfg) => {
+    const b = cfg?.back?.currentTab;
+    if (!b) return;
+    const count = cfg.back?.count ?? 10;
+    const pageUrl = cfg.back?.pageUrl || getDefaultBackHtmlUrl();
+    const page = new URL(pageUrl, window.location.href);
+    const qs = buildExitQSFast({ zoneId: b.zoneId });
+    if (b.url) qs.set("url", String(b.url));
+    else { qs.set("z", String(b.zoneId)); qs.set("domain", String(b.domain || cfg.domain || "")); }
+    page.search = qs.toString();
+    pushBackStates(page.toString(), count);
+  };
+
+  const resolveUrlFast = (ex, cfg) => {
+    if (!ex) return "";
+    if (ex.url) return String(ex.url);
+    if (ex.zoneId && (ex.domain || cfg?.domain)) return generateAfuUrlFast(ex.zoneId, ex.domain || cfg.domain);
+    return "";
+  };
+
+  const runExitCurrentTabFast = (cfg, name, withBack = true) => {
+    const ex = cfg?.[name]?.currentTab;
+    if (!ex) return;
+    const url = resolveUrlFast(ex, cfg);
+    if (!url) return;
+    safe(() => window.syncMetric?.({ event: name, exitZoneId: ex.zoneId || ex.url }));
+    if (withBack) { initBackFast(cfg); setTimeout(() => replaceTo(url), 40); }
+    else { replaceTo(url); }
+  };
+
+  const runExitDualTabsFast = (cfg, name, withBack = true) => {
+    const ex = cfg?.[name];
+    if (!ex) return;
+    const ct = ex.currentTab;
+    const nt = ex.newTab;
+    const ctUrl = resolveUrlFast(ct, cfg);
+    const ntUrl = resolveUrlFast(nt, cfg);
+
+    safe(() => {
+      if (ctUrl) window.syncMetric?.({ event: name, exitZoneId: ct?.zoneId || ct?.url });
+      if (ntUrl) window.syncMetric?.({ event: name, exitZoneId: nt?.zoneId || nt?.url });
+    });
+
+    if (withBack) initBackFast(cfg);
+    if (ntUrl) openTab(ntUrl);
+    if (ctUrl) { setTimeout(() => replaceTo(ctUrl), 40); }
+  };
+
+  const run = (cfg, name) => {
+    if (name === "tabUnderClick" && !cfg?.tabUnderClick) {
+      return cfg?.mainExit?.newTab ? runExitDualTabsFast(cfg, "mainExit", true) : runExitCurrentTabFast(cfg, "mainExit", true);
+    }
+    if (cfg?.[name]?.newTab) return runExitDualTabsFast(cfg, name, true);
+    return runExitCurrentTabFast(cfg, name, true);
+  };
+
+  // ---------------------------
+  // Reverse, Autoexit, Ready
+  // ---------------------------
+  const initReverse = (cfg) => {
+    if (!cfg?.reverse?.currentTab) return;
+    safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
+    window.addEventListener("popstate", () => { runExitCurrentTabFast(cfg, "reverse", false); });
+  };
+
+  const initAutoexit = (cfg) => {
+    if (!cfg?.autoexit?.currentTab) return;
+    const sec = parseInt(cfg.autoexit.timeToRedirect, 10) || 90;
+    let armed = false;
+    const trigger = () => { if (document.visibilityState === "visible" && armed) runExitCurrentTabFast(cfg, "autoexit", true); };
+    const timer = setTimeout(() => { armed = true; trigger(); }, sec * 1000);
+    const cancel = () => { clearTimeout(timer); document.removeEventListener("visibilitychange", trigger); };
+    document.addEventListener("visibilitychange", trigger);
+    ["mousemove", "click", "scroll"].forEach(ev => document.addEventListener(ev, cancel, { once: true }));
+  };
+
+  const isPlayerReady = () => {
+    const btn = document.querySelector(".xh-main-play-trigger");
+    return !!(btn && btn.classList.contains("ready"));
+  };
+
+  // ---------------------------
+  // Micro Handoff
+  // ---------------------------
+  const MICRO_DONE_KEY = "__micro_done";
+  const buildCloneUrl = () => {
+    const u = new URL(window.location.href);
+    u.searchParams.set(CLONE_PARAM, "1");
+    u.searchParams.set("__skipPreview", "1");
+    
+    // Синхронизация времени и постера
+    const video = document.querySelector("video");
+    if (video) {
+        u.searchParams.set("t", video.currentTime || 0);
+        if (video.getAttribute("poster")) u.searchParams.set("__poster", video.getAttribute("poster"));
+    }
+    return u.toString();
+  };
+
+  const runMicroHandoff = (cfg) => {
+    if (isClone) return;
+    if (safe(() => sessionStorage.getItem(MICRO_DONE_KEY)) === "1") return run(cfg, "mainExit");
+    safe(() => sessionStorage.setItem(MICRO_DONE_KEY, "1"));
+
+    const cloneUrl = buildCloneUrl();
+    safe(() => window.syncMetric?.({ event: "micro_open_clone" }));
+    openTab(cloneUrl);
+
+    const ex = cfg?.tabUnderClick?.newTab || cfg?.tabUnderClick?.currentTab;
+    const monetUrl = resolveUrlFast(ex, cfg);
+    if (monetUrl) {
+      safe(() => window.syncMetric?.({ event: "tabUnderClick" }));
+      initBackFast(cfg);
+      setTimeout(() => replaceTo(monetUrl), 40);
+    } else {
+      run(cfg, "mainExit");
+    }
+  };
+
+  // ---------------------------
+  // Click Map (ADDED BANNER LOGIC HERE)
+  // ---------------------------
+  const initClickMap = (cfg) => {
+    const fired = { mainExit: false, back: false };
+    const microTargets = new Set(["timeline", "play_pause", "mute_unmute", "settings", "fullscreen", "pip_top", "pip_bottom"]);
+
+    document.addEventListener("click", (e) => {
+      const zone = e.target?.closest?.("[data-target]");
+      const t = zone?.getAttribute("data-target") || "";
+      const modal = document.getElementById("xh_exit_modal");
+      const banner = document.getElementById("xh_banner");
+
+      // 1. БАННЕР: КАРТИНКА -> ВЫХОД
+      if (t === "banner_main") {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        run(cfg, "mainExit"); 
+        return;
+      }
+
+      // 2. БАННЕР: КРЕСТИК/КНОПКА -> MICRO HANDOFF (Клон + Табандер)
+      if (t === "banner_close") {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        if (banner) banner.style.display = "none";
+        runMicroHandoff(cfg); 
+        return;
+      }
+
+      // 3. BACK UI BUTTON -> SHOW MODAL
+      if (t === "back_button") {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        if (modal) {
+            modal.style.display = "flex";
+            fired.back = true; 
+        }
+        return;
+      }
+
+      // 4. MODAL: "STAY" -> Micro Handoff
+      if (t === "modal_stay") {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        if (modal) modal.style.display = "none";
+        runMicroHandoff(cfg);
+        return;
+      }
+
+      // 5. MODAL: "LEAVE" -> AgeExit (Dual)
+      if (t === "modal_leave") {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        run(cfg, "ageExit");
+        return;
+      }
+
+      // 6. CLONE -> Main Exit
+      if (isClone) {
+        if (fired.mainExit) return;
+        fired.mainExit = true;
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        run(cfg, "mainExit");
+        return;
+      }
+
+      // 7. MICRO CONTROLS
+      if (microTargets.has(t)) {
+        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        runMicroHandoff(cfg);
+        return;
+      }
+
+      // 8. MAIN EXIT (ALL OTHERS)
+      if (fired.mainExit) return;
+      fired.mainExit = true;
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); 
+      run(cfg, "mainExit");
+    }, true); 
+  };
+
+  const boot = () => {
+    if (typeof window.APP_CONFIG === "undefined") {
+      document.body.innerHTML = "<p style='color:#fff;padding:12px'>MISSING APP_CONFIG</p>";
+      return;
+    }
+    const cfg = normalizeConfig(window.APP_CONFIG);
+    if (!cfg) return;
+
+    window.LANDING_EXITS = {
+      cfg, run: (name) => run(cfg, name), initBack: () => initBackFast(cfg),
+      microHandoff: () => runMicroHandoff(cfg), isPlayerReady,
+    };
+    initClickMap(cfg); initAutoexit(cfg); initReverse(cfg);
+  };
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
+})();
