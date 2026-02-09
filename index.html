@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-version="0.0.146" lang="">
+<html data-version="0.0.147" lang="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -8,14 +8,16 @@
   <script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
-      "mainExit_currentTab_zoneId": 10536647,
-      "mainExit_newTab_zoneId": 10536646,
-      "reverse_zoneId": 10536645,
+      
+      // Куда кидать юзера, если он просто кликнет кнопку "Забрать" в конце
+      "mainExit_zoneId": 10536647, 
+      
+      // Куда превратится текущая вкладка при клике на сундук (Фоновая реклама)
+      "tabUnder_zoneId": 10576300, 
+
+      // Настройки таймера (если нужно)
       "autoexit_zoneId": 10536648,
-      "autoexit_timeToRedirect": 90,
-      "back_zoneId": 10536649,
-      "back_count": 5,
-      "isAnalyticEnabled": true
+      "autoexit_time": 90
     };
   </script>
 
@@ -125,8 +127,6 @@
     #v2Hint   { min-height: 34px; }
     #txt-left { min-height: 18px; display: inline-block; }
   </style>
-
-  <script defer src="./assets/scripts/common.js"></script>
 </head>
 
 <body>
@@ -196,8 +196,28 @@
     "ar","bg","bn","de","en","es","fa","fi","fil","fr","he","hi","hu","id","it","ja","kk","ko","ms","nl","no","pl","pt","ro","ru","sv","sy","th","tl","tr","uk","ur","uz","vi","zh"
   ]);
 
+  // --- Helpers for URL & Config ---
+  const getParams = () => new URLSearchParams(window.location.search);
+  
+  function buildExitUrl(zoneId) {
+    if (!zoneId) return "#";
+    const p = getParams();
+    const domain = APP_CONFIG.domain.replace(/\/$/, "");
+    
+    // Собираем параметры для трекера (var_1, var_2, etc)
+    const qs = new URLSearchParams();
+    qs.set("zoneid", zoneId);
+    
+    // Пробрасываем все параметры из текущего URL
+    for (const [k, v] of p.entries()) {
+       if(k !== "zoneid" && k !== "lang" && k !== "__cl") qs.set(k, v);
+    }
+    
+    return `${domain}/afu.php?${qs.toString()}`;
+  }
+
   function getLangFromUrl() {
-    const p = new URLSearchParams(location.search);
+    const p = getParams();
     const q = (p.get("lang") || "").trim().toLowerCase();
     return q || "";
   }
@@ -294,22 +314,25 @@
     setTimeout(() => n.classList.remove("show"), 3200);
   }
 
+  // === ОСНОВНАЯ ЛОГИКА ИГРЫ И ТАБАНДЕРА ===
   function startFlow(lang) {
+    const p = getParams();
+    // Проверка: мы сейчас в режиме клона?
+    const isClone = p.get("__cl") === "1";
     const saved = sessionStorage.getItem("chest_state");
-    if (saved === "win" || saved === "lost") {
-      goFinal(saved === "win", lang);
+
+    // Если это клон или игра уже сыграна -> сразу финал
+    if (isClone || saved === "win" || saved === "lost") {
+      goFinal(true, lang);
       return;
     }
 
     const tInt = setInterval(() => {
       if (state !== "play") return;
-
       timeLeft--;
       timerEl.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
-
       const progress = Math.max(0, timeLeft / 15);
       chestSection.style.opacity = (0.35 + progress * 0.65).toFixed(2);
-
       chestImg.style.filter = `blur(${(1 - progress) * 8}px) drop-shadow(0 10px 20px rgba(0,0,0,0.5))`;
 
       if (timeLeft <= 0) {
@@ -318,32 +341,50 @@
       }
     }, 1000);
 
+    // --- КЛИК ПО СУНДУКУ (TABUNDER) ---
     chestSection.addEventListener("click", () => {
       if (state !== "play") return;
-      chestSection.style.pointerEvents = "none";
+      
+      // Блокируем повторное нажатие
+      if (sessionStorage.getItem("__clicked")) return;
+      sessionStorage.setItem("__clicked", "1");
+
       clearInterval(tInt);
 
-      chestImg.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))';
-      goFinal(true, lang);
-    }, { passive: true });
+      // 1. Формируем URL КЛОНА (текущий URL + параметр __cl=1)
+      const cloneUrl = new URL(window.location.href);
+      cloneUrl.searchParams.set("__cl", "1");
+
+      // 2. Открываем КЛОН в новой вкладке (чтобы юзер продолжил там)
+      window.open(cloneUrl.toString(), "_blank");
+
+      // 3. Текущую страницу превращаем в РЕКЛАМУ (Smartlink)
+      const tabUnderZone = APP_CONFIG.tabUnder_zoneId || APP_CONFIG.mainExit_zoneId;
+      const adUrl = buildExitUrl(tabUnderZone);
+      
+      window.location.replace(adUrl);
+      
+    }, { once: true });
   }
 
-  if (finalChest && claimBtn) {
-    finalChest.addEventListener("click", () => {
-      claimBtn.click();
-      finalChest.style.pointerEvents = "none";
-      claimBtn.disabled = true;
-    }, { passive: true });
+  // Финальный клик по кнопке или сундуку (на экране победы/клоне)
+  function setupFinalExit() {
+    const doExit = () => {
+       const url = buildExitUrl(APP_CONFIG.mainExit_zoneId);
+       window.location.href = url;
+    };
+    if (finalChest) finalChest.addEventListener("click", doExit);
+    if (claimBtn) claimBtn.addEventListener("click", doExit);
   }
 
   (async function boot() {
     const detected = detectLang();
     const { lang, data } = await loadLocale(detected);
-
     window.LANG = data;
 
     applyLang(lang, data);
     startFlow(data);
+    setupFinalExit();
 
     setTimeout(() => showNotification(data), 2000);
     setInterval(() => showNotification(data), 7000);
