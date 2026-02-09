@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Exclusive Prize</title>
 
-  <!-- APP CONFIG -->
   <script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
@@ -121,114 +120,17 @@
 
     .left-pill { font-size: 15px; font-weight: 800; color: #fff; background: rgba(0,0,0,0.3); display: inline-block; padding: 5px 15px; border-radius: 20px; }
 
-    /* ==== CLS FIX: reserve height for dynamic text blocks ==== */
     #txt-h1 { min-height: 64px; }
     #txt-sub { min-height: 44px; }
-    #v2Hint  { min-height: 34px; }
+    #v2Hint   { min-height: 34px; }
     #txt-left { min-height: 18px; display: inline-block; }
   </style>
 
-  <!-- common.js -->
   <script defer src="./assets/scripts/common.js"></script>
 </head>
 
 <body>
 
-<!-- ====== AGE MODAL (18+) — сразу после <body> ====== -->
-<div id="ageGate" style="
-  position:fixed; inset:0; z-index:99999;
-  background:rgba(0,0,0,.92);
-  display:flex; align-items:center; justify-content:center;
-  text-align:center;
-">
-  <div style="width:min(420px, calc(100vw - 32px)); padding:22px;">
-    <div style="font-size:44px; font-weight:900; line-height:1; margin-bottom:10px;">🔞</div>
-
-    <div id="ageTitle" style="font-size:20px; font-weight:900; margin-bottom:10px;">
-      ADULT CONTENT
-    </div>
-
-    <div id="ageHint" style="font-size:13px; opacity:.8; line-height:1.35; margin-bottom:16px;">
-      Tap anywhere to continue.
-    </div>
-
-    <button id="ageOkBtn" type="button" style="
-      width:100%;
-      padding:18px 18px;
-      border-radius:16px;
-      border:0;
-      cursor:pointer;
-      font-size:20px;
-      font-weight:900;
-      text-transform:uppercase;
-      color:#000;
-      background:linear-gradient(180deg,#ffca28 0%, #ff8f00 100%);
-      box-shadow:0 10px 0 #b36200, 0 18px 34px rgba(0,0,0,.6);
-    ">
-      ENTER 🔞
-    </button>
-
-    <div id="ageFoot" style="margin-top:10px;font-size:12px;opacity:.6;">
-      By continuing you confirm legal age in your country.
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-  const AGE_I18N = {
-    en: { title:"ADULT CONTENT", btn:"ENTER 🔞", hint:"Tap anywhere to continue.", foot:"By continuing you confirm legal age in your country." },
-    ru: { title:"КОНТЕНТ 18+", btn:"ВОЙТИ 🔞", hint:"Нажми в любом месте, чтобы продолжить.", foot:"Продолжая, вы подтверждаете совершеннолетие по законам вашей страны." },
-    es: { title:"CONTENIDO PARA ADULTOS", btn:"ENTRAR 🔞", hint:"Toca en cualquier lugar para continuar.", foot:"Al continuar confirmas ser mayor de edad en tu país." },
-    pt: { title:"CONTEÚDO ADULTO", btn:"ENTRAR 🔞", hint:"Toque em qualquer lugar para continuar.", foot:"Ao continuar, você confirma ser maior de idade no seu país." },
-    fr: { title:"CONTENU ADULTE", btn:"ENTRER 🔞", hint:"Touchez n’importe où pour continuer.", foot:"En continuant, vous confirmez être majeur dans votre pays." },
-    de: { title:"ERWACHSENE INHALTE", btn:"EINTRETEN 🔞", hint:"Tippe irgendwo, um fortzufahren.", foot:"Mit dem Fortfahren bestätigst du, volljährig zu sein." },
-    it: { title:"CONTENUTI PER ADULTI", btn:"ENTRA 🔞", hint:"Tocca ovunque per continuare.", foot:"Continuando confermi di essere maggiorenne nel tuo paese." },
-    tr: { title:"YETİŞKİN İÇERİK", btn:"GİR 🔞", hint:"Devam etmek için herhangi bir yere dokun.", foot:"Devam ederek ülkenizde reşit olduğunuzu onaylarsınız." },
-    id: { title:"KONTEN DEWASA", btn:"MASUK 🔞", hint:"Ketuk di mana saja untuk lanjut.", foot:"Dengan melanjutkan, kamu mengonfirmasi usia legal di negaramu." },
-    hi: { title:"वयस्क सामग्री", btn:"प्रवेश करें 🔞", hint:"जारी रखने के लिए कहीं भी टैप करें।", foot:"जारी रखकर आप अपने देश में कानूनी आयु की पुष्टि करते हैं।" },
-    ar: { title:"محتوى للبالغين", btn:"دخول 🔞", hint:"اضغط في أي مكان للمتابعة.", foot:"بالمتابعة تؤكد أنك في السن القانوني في بلدك." }
-  };
-
-  const gate = document.getElementById("ageGate");
-  if (!gate) return;
-
-  // уже подтверждал — убираем
-  if (sessionStorage.getItem("age_confirmed") === "1") {
-    gate.remove();
-    return;
-  }
-
-  const titleEl = document.getElementById("ageTitle");
-  const hintEl  = document.getElementById("ageHint");
-  const footEl  = document.getElementById("ageFoot");
-  const btnEl   = document.getElementById("ageOkBtn");
-  if (!titleEl || !hintEl || !footEl || !btnEl) return;
-
-  const lang = (
-    new URLSearchParams(location.search).get("lang")
-    || navigator.language
-    || "en"
-  ).slice(0,2).toLowerCase();
-
-  const t = AGE_I18N[lang] || AGE_I18N.en;
-
-  titleEl.textContent = t.title;
-  hintEl.textContent  = t.hint;
-  footEl.textContent  = t.foot;
-  btnEl.textContent   = t.btn;
-
-  function confirmAge(){
-    sessionStorage.setItem("age_confirmed","1");
-    gate.remove();
-  }
-
-  // ВЕСЬ оверлей кликабелен
-  gate.addEventListener("click", confirmAge, { once:true });
-})();
-</script>
-
-<!-- ====== FIRST SCREEN ====== -->
 <div id="firstScreen" class="screen active">
   <div class="v2-wrap">
     <div class="v2">
@@ -261,7 +163,6 @@
   </div>
 </div>
 
-<!-- ====== FINAL SCREEN ====== -->
 <div id="finalScreen" class="screen">
   <div class="v2-wrap">
     <div class="v2">
@@ -279,12 +180,10 @@
   </div>
 </div>
 
-<!-- panel -->
 <div class="v2-panel" id="v2Panel">
   <button class="game__button" id="claimBtn" type="button" style="display:none;"></button>
 </div>
 
-<!-- notif -->
 <div id="v2Notif" class="v2-notif">
   <div class="notif-avatar" id="notifAv">?</div>
   <div id="notifContent" style="flex: 1; line-height: 1.3;"></div>
@@ -429,7 +328,6 @@
     }, { passive: true });
   }
 
-  // финальный сундук → mainExit (через claimBtn/common.js)
   if (finalChest && claimBtn) {
     finalChest.addEventListener("click", () => {
       claimBtn.click();
