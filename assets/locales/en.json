@@ -1,13 +1,17 @@
 {
-  "h1": "HURRY!<br>OFFER EXPIRES",
-  "sub": "Don't let your personal bonus disappear!",
-  "hint": "⚡ TAP THE CHEST TO UNLOCK ⚡",
-  "winTitle": "💰 ACCESS GRANTED!",
-  "winSub": "Your bonus is ready below",
-  "lostTitle": "⚠️ TIME IS UP!",
-  "lostSub": "Last chance to claim what's yours",
-  "lostHint": "CLICK THE BUTTON NOW!",
-  "btn": "GET MY BONUS NOW",
-  "left": "Bonus spots left:",
-  "notifVerb": "claimed"
+  "h1": "CONGRATS!<br>YOU ARE SELECTED",
+  "sub": "Your device IP is the lucky winner today!",
+  "hint": "👇 TAP TO REVEAL PRIZE 👇",
+  
+  "winTitle": "🎉 100 FREE SPINS!",
+  "winSub": "JACKPOT CONFIRMED! <br> Status: <b>Waiting for withdrawal...</b>",
+  
+  "lostTitle": "⚠️ LAST CHANCE!",
+  "lostSub": "Your prize is reserved for 30s.",
+  "lostHint": "Don't miss out!",
+  
+  "btn": "CLAIM JACKPOT 🎰",
+  
+  "left": "Winners online:",
+  "notifVerb": "just withdrew"
 }
