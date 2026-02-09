@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-version="0.0.154" lang="">
+<html data-version="0.0.155" lang="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -74,25 +74,28 @@
       pointer-events: none;
       filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
       user-select: none;
+      opacity: .95;
     }
     .hand-left { left: -50px; transform: translateY(-50%) rotate(90deg); animation: pokeRight 0.5s ease-in-out infinite alternate; }
     .hand-right { right: -50px; transform: translateY(-50%) rotate(-90deg) scaleX(-1); animation: pokeLeft 0.5s ease-in-out infinite alternate; }
     @keyframes pokeRight { from { transform: translateY(-50%) rotate(90deg) translateX(0); } to { transform: translateY(-50%) rotate(90deg) translateX(20px); } }
     @keyframes pokeLeft { from { transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0); } to { transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-20px); } }
 
-    .v2-hint { margin: 20px 0; font-size: 24px; font-weight: 900; color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.5); }
+    .v2-hint { margin: 18px 0 10px; font-size: 24px; font-weight: 900; color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.5); }
 
     .final-top {
-      margin-bottom: 25px;
-      padding: 25px 15px;
+      margin: 0 auto 22px;
+      padding: 22px 16px;
       border-radius: 20px;
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid #ffca28;
       backdrop-filter: blur(10px);
       box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+      max-width: 430px;
     }
     .final-top__title { font-size: 32px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
-    #finalTopSub { margin: 10px 0 0; font-size: 18px; font-weight: 600; color: #fff; line-height: 1.25; }
+    #finalTopSub { margin: 10px 0 0; font-size: 18px; font-weight: 650; color: #fff; line-height: 1.25; }
+    #finalTopSub .sub2 { display:block; margin-top:6px; opacity:.95; }
 
     .v2-notif {
       position: fixed; top: 10px; left: 50%;
@@ -121,10 +124,10 @@
 
     /* ===== WIN NUDGE (следующий уровень) ===== */
     .tap-hint{
-      margin: 16px auto 0;
+      margin: 14px auto 0;
       width: fit-content;
       max-width: min(420px, 92vw);
-      padding: 12px 20px;
+      padding: 12px 18px;
       border-radius: 999px;
       font-size: 18px;
       font-weight: 900;
@@ -138,6 +141,10 @@
       transition: 300ms ease;
       pointer-events: none;
       user-select: none;
+      white-space: nowrap;
+    }
+    @media (max-width: 360px){
+      .tap-hint{ font-size:16px; white-space: normal; }
     }
     .tap-hint.show{
       opacity: 1;
@@ -172,12 +179,18 @@
     .tap-hand:nth-child(2){ animation-delay: .12s; }
     @keyframes tapUp{ from{ transform: translateY(0); } to{ transform: translateY(10px); } }
 
-    /* пульс только когда подсказываем */
     #finalChest.nudge{ animation: chestPulse 1.55s ease-in-out infinite; }
     @keyframes chestPulse{
       0%{ transform: scale(1); }
       50%{ transform: scale(1.03); }
       100%{ transform: scale(1); }
+    }
+
+    /* вспышка на первом тапе по WIN сундуку */
+    #finalChest.flash { animation: flashPop 140ms ease-out 1; }
+    @keyframes flashPop{
+      0%{ transform: scale(1); filter:none; }
+      100%{ transform: scale(1.06); filter: drop-shadow(0 0 22px rgba(255,202,40,.55)); }
     }
     /* ===== /WIN NUDGE ===== */
   </style>
@@ -188,14 +201,15 @@
 <body>
 
 <div id="firstScreen" class="screen active">
-  <div class="v2-wrap" data-target="play_pause" style="cursor: pointer;">
+  <div class="v2-wrap" style="cursor: pointer;">
     <div class="v2">
       <h1 id="txt-h1"></h1>
       <div class="sub-h1" id="txt-sub"></div>
 
       <div class="timer-box"><span id="timer">00:15</span></div>
 
-      <div class="v2-single-chest" id="chestSection">
+      <!-- PLAY сундук: микротриггер -->
+      <div class="v2-single-chest" id="chestSection" style="cursor:pointer;">
         <div class="v2-img">
           <img id="chestImg"
                src="assets/images/chest-v2.webp"
@@ -204,7 +218,6 @@
                alt="Chest" width="360" height="360"
                fetchpriority="high" decoding="async">
         </div>
-
         <div class="hand-pointer hand-left">👆</div>
         <div class="hand-pointer hand-right">👆</div>
       </div>
@@ -223,7 +236,7 @@
         <p id="finalTopSub"></p>
       </div>
 
-      <!-- СУНДУК = CTA -->
+      <!-- FINAL сундук = CTA (banner_main) -->
       <div class="v2-single-chest is-clickable" id="finalChest" style="width: 85%; cursor: pointer;" data-target="banner_main">
         <div class="v2-img">
           <img id="finalChestImg"
@@ -234,8 +247,8 @@
         </div>
       </div>
 
-      <!-- ПОДСКАЗКА (только на WIN, появляется с задержкой) -->
-      <div class="tap-hint" id="tapHint" aria-hidden="true">⚡ Тапай на сундук — бонус твой</div>
+      <!-- WIN-only подсказка -->
+      <div class="tap-hint" id="tapHint" aria-hidden="true"></div>
       <div class="tap-hands" id="tapHands" aria-hidden="true">
         <span class="tap-hand">👆</span>
         <span class="tap-hand">👆</span>
@@ -256,11 +269,8 @@
 
   function escapeHtml(s) {
     return String(s || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
   function detectLang() {
@@ -300,17 +310,14 @@
     tapHands: document.getElementById("tapHands")
   };
 
-  // нотифы (оставил как у тебя — если хочешь, сделаем по локалям)
   const users = ["Alex_W","Mariya_N","Dmitry_S","User_777","Svetlana_K","Winner_PRO","Jack_Lucky","Emma_S","Nick_88","Volkov_Ivan"];
   const prizes = ["BONUS x5","VIP ACCESS","FREE SPIN","MEGA BONUS","$500 REWARD"];
 
   let timeLeft = 15;
-  let state = "play";
+  let state = "play";      // play | lost | win
   let currentLocale = null;
 
-  function setTextWithBr(el, s) {
-    el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>");
-  }
+  function setTextWithBr(el, s) { el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>"); }
 
   function applyLang(langCode, lang) {
     document.documentElement.lang = langCode;
@@ -321,18 +328,35 @@
     els.hint.textContent = lang.hint || "";
     els.left.textContent = lang.left || "";
 
-    // win подсказка (можно добавить ключ winHint в локали)
+    // WIN подсказка (фолбэк, локаль править не надо)
     if (els.tapHint) {
       els.tapHint.textContent = lang.winHint || "⚡ Тапай на сундук — бонус твой";
     }
   }
 
+  function buildCloneUrl() {
+    const u = new URL(location.href);
+    u.searchParams.set("__cl", "1");
+    // чтобы не кешировалось криво при тестах
+    u.searchParams.set("__t", String(Date.now()).slice(-8));
+    return u.toString();
+  }
+
+  function openClone() {
+    // клон нужен ОДИН раз, дальше не спамим
+    if (sessionStorage.getItem("clone_opened") === "1") return;
+    sessionStorage.setItem("clone_opened", "1");
+
+    const url = buildCloneUrl();
+    // лучше открыть на pointerdown, и именно в новом табе, чтобы не блокировало
+    const w = window.open(url, "_blank", "noopener,noreferrer");
+    if (w) { try { w.opener = null; } catch (e) {} }
+  }
+
   function showWinNudge() {
     if (!els.tapHint || !els.tapHands || !els.finalChest) return;
-
     setTimeout(() => els.tapHint.classList.add("show"), 250);
     setTimeout(() => els.tapHands.classList.add("show"), 420);
-
     els.finalChest.classList.add("nudge");
   }
 
@@ -342,29 +366,39 @@
     if (els.finalChest) els.finalChest.classList.remove("nudge");
   }
 
+  function setFinalText(isWin, lang) {
+    els.fTitle.textContent = isWin ? (lang.winTitle || "") : (lang.lostTitle || "");
+
+    if (isWin) {
+      els.fSub.textContent = (lang.winSub || "");
+      return;
+    }
+
+    // LOST: всегда 2 строки (без рандомных переносов)
+    const sub = escapeHtml(lang.lostSub || "");
+    const hint = escapeHtml(lang.lostHint || "");
+    els.fSub.innerHTML = hint
+      ? `${sub}<span class="sub2">${hint}</span>`
+      : sub;
+  }
+
+  function setFinalChestImage(isWin) {
+    const openSrc = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
+    const closedSrc = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
+    // WIN -> open, LOST -> closed
+    els.finalChestImg.src = isWin ? openSrc : closedSrc;
+  }
+
   function goFinal(isWin, lang) {
     state = isWin ? "win" : "lost";
     sessionStorage.setItem("chest_state", state);
 
-    const openSrc = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
-    const closedSrc = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
-    els.finalChestImg.src = isWin ? openSrc : closedSrc;
-
-    els.fTitle.textContent = isWin ? (lang.winTitle || "") : (lang.lostTitle || "");
-
-    // переносы: lostSub и lostHint всегда на разных строках
-    if (isWin) {
-      els.fSub.textContent = (lang.winSub || "");
-    } else {
-      const sub = escapeHtml(lang.lostSub || "");
-      const hint = escapeHtml(lang.lostHint || "");
-      els.fSub.innerHTML = hint ? `${sub}<br><span style="opacity:.95">${hint}</span>` : sub;
-    }
+    setFinalChestImage(isWin);
+    setFinalText(isWin, lang);
 
     els.first.classList.remove("active");
     els.final.classList.add("active");
 
-    // nudge только на WIN
     if (isWin) showWinNudge();
     else hideWinNudge();
   }
@@ -374,26 +408,60 @@
     const u = users[Math.floor(Math.random() * users.length)];
     const p = prizes[Math.floor(Math.random() * prizes.length)];
     document.getElementById("notifAv").textContent = u.charAt(0);
-    document.getElementById("notifContent").innerHTML = `<strong>${u}</strong> ${(lang.notifVerb || "claimed")} <span style="color:#ffca28; font-weight:800;">${p}</span>`;
+    document.getElementById("notifContent").innerHTML =
+      `<strong>${u}</strong> ${(lang.notifVerb || "claimed")} <span style="color:#ffca28; font-weight:800;">${p}</span>`;
     const n = document.getElementById("v2Notif");
     n.classList.add("show");
     setTimeout(() => n.classList.remove("show"), 3200);
+  }
+
+  // === СХЕМА A: единый обработчик клика по сундуку ===
+  function onChestTap(source) {
+    // source: "play" | "lost" | "win"
+    if (!currentLocale) return;
+
+    if (source === "play") {
+      // микротриггер: открыл клон + показал WIN в текущей вкладке
+      openClone();
+      sessionStorage.setItem("chest_state", "win");
+      goFinal(true, currentLocale);
+      return;
+    }
+
+    if (source === "lost") {
+      // добив: сначала дай "выигрыш" (open), без оффера
+      sessionStorage.setItem("chest_state", "win");
+      goFinal(true, currentLocale);
+      return;
+    }
+
+    // WIN: оффер обрабатывает common.js по data-target="banner_main"
+    // тут только визуал/подсказка
+    hideWinNudge();
+    if (els.tapHint) els.tapHint.textContent = (currentLocale.winHintClicked) || "⏳ Забираем бонус…";
+    if (els.finalChest) {
+      els.finalChest.classList.add("flash");
+      setTimeout(() => els.finalChest && els.finalChest.classList.remove("flash"), 170);
+    }
   }
 
   function startFlow(lang) {
     const isClone = new URLSearchParams(location.search).get("__cl") === "1";
     const saved = sessionStorage.getItem("chest_state");
 
+    // клон всегда WIN
     if (isClone) {
       goFinal(true, lang);
       return;
     }
 
+    // если уже есть сохранённое состояние — уважаем его
     if (saved === "win" || saved === "lost") {
       goFinal(saved === "win", lang);
       return;
     }
 
+    // таймер
     const tInt = setInterval(() => {
       if (state !== "play") return;
 
@@ -406,6 +474,8 @@
 
       if (timeLeft <= 0) {
         clearInterval(tInt);
+        // LOST: закрытый сундук + добив
+        sessionStorage.setItem("chest_state", "lost");
         goFinal(false, lang);
       }
     }, 1000);
@@ -419,12 +489,23 @@
     applyLang(lang, data);
     startFlow(data);
 
-    // спрятать подсказку после первого тапа по сундуку на финале
+    // PLAY tap → micro + win
+    if (els.chest) {
+      els.chest.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        if (state !== "play") return;
+        onChestTap("play");
+      }, { passive: false });
+    }
+
+    // FINAL tap:
+    // - если LOST: переводим в WIN
+    // - если WIN: оффер (common.js) + визуал
     if (els.finalChest) {
       els.finalChest.addEventListener("pointerdown", () => {
-        hideWinNudge();
-        if (els.tapHint) els.tapHint.textContent = (currentLocale && currentLocale.winHintClicked) || "⏳ Забираем бонус…";
-      }, { once: true });
+        if (state === "lost") onChestTap("lost");
+        else if (state === "win") onChestTap("win");
+      }, { passive: true });
     }
 
     setTimeout(() => showNotification(data), 2000);
