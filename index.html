@@ -9,7 +9,7 @@
     var APP_CONFIG = {
       "domain": "https://jup9.com",
       "mainExit_currentTab_zoneId": 10536647,
-      "tabUnderClick_zoneId": 10576300, 
+      "tabUnderClick_zoneId": 10576300,
       "back_zoneId": 10536649,
       "back_count": 10,
       "autoexit_zoneId": 10536648,
@@ -18,7 +18,6 @@
   </script>
 
   <style>
-    /* STYLES (ОСНОВНЫЕ) */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { background: radial-gradient(circle at center, #2e1a54 0%, #050505 100%); color: #fff; font-family: system-ui, -apple-system, Segoe UI, sans-serif; text-align: center; margin: 0; min-height: 100svh; overflow: hidden; }
     .screen { display: none; min-height: 100svh; }
@@ -27,8 +26,7 @@
     .v2 { width: min(450px, 100%); transform: translateY(-20px); }
     h1 { font-size: clamp(36px, 12vw, 54px); font-weight: 900; margin: 0; text-transform: uppercase; line-height: .95; background: linear-gradient(180deg, #FFF192 0%, #FFCA28 50%, #D09600 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8)); }
     .sub-h1 { font-size: 18px; margin: 15px 0 20px; color: #d1c4e9; font-weight: 500; padding: 0 10px; }
-    
-    /* ТРЯСКА ТАЙМЕРА */
+
     @keyframes shake {
       0% { transform: translate(1px, 1px) rotate(0deg); }
       10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -42,10 +40,11 @@
       90% { transform: translate(1px, 2px) rotate(0deg); }
       100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
-    .timer-box { 
-      font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 25px; 
-      background: rgba(0,0,0,0.4); display: inline-block; padding: 8px 35px; 
-      border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); 
+
+    .timer-box {
+      font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 25px;
+      background: rgba(0,0,0,0.4); display: inline-block; padding: 8px 35px;
+      border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2);
       min-height: 58px;
       animation: shake 0.5s infinite;
     }
@@ -53,28 +52,27 @@
     .v2-single-chest { position: relative; width: 80%; margin: 0 auto; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
     .v2-img img { width: 100%; height: auto; animation: float 2.5s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); will-change: transform, filter; }
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-15px)} }
-    
-    /* === ОБНОВЛЕННЫЕ РУКИ (ЭМОДЗИ) === */
+
     .hand-pointer {
       position: absolute;
       top: 50%;
-      font-size: 70px; /* Размер руки */
+      font-size: 70px;
       line-height: 1;
       z-index: 10;
       pointer-events: none;
-      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8)); /* Тень для объема */
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
       user-select: none;
     }
 
     .hand-left {
       left: -50px;
-      transform: translateY(-50%) rotate(90deg); 
+      transform: translateY(-50%) rotate(90deg);
       animation: pokeRight 0.5s ease-in-out infinite alternate;
     }
 
     .hand-right {
       right: -50px;
-      transform: translateY(-50%) rotate(-90deg) scaleX(-1); /* Отражаем палец */
+      transform: translateY(-50%) rotate(-90deg) scaleX(-1);
       animation: pokeLeft 0.5s ease-in-out infinite alternate;
     }
 
@@ -86,7 +84,6 @@
       from { transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0); }
       to { transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-20px); }
     }
-    /* ======================== */
 
     .v2-hint { margin: 20px 0; font-size: 24px; font-weight: 900; color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.5); }
     .final-top { margin-bottom: 25px; padding: 25px 15px; border-radius: 20px; background: rgba(255, 255, 255, 0.05); border: 2px solid #ffca28; backdrop-filter: blur(10px); box-shadow: 0 15px 40px rgba(0,0,0,0.7); }
@@ -113,26 +110,27 @@
 
 <div id="firstScreen" class="screen active">
   <div class="v2-wrap" data-target="play_pause" style="cursor: pointer;">
-    
     <div class="v2">
       <h1 id="txt-h1"></h1>
       <div class="sub-h1" id="txt-sub"></div>
-      
       <div class="timer-box"><span id="timer">00:15</span></div>
 
       <div class="v2-single-chest" id="chestSection">
         <div class="v2-img">
-          <img id="chestImg" src="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest" width="360" height="360" fetchpriority="high" decoding="async">
+          <img id="chestImg"
+               src="assets/images/chest-v2.webp"
+               data-closed="assets/images/chest-v2.webp"
+               data-open="assets/images/treasure-chest-open.webp"
+               alt="Chest" width="360" height="360"
+               fetchpriority="high" decoding="async">
         </div>
-
         <div class="hand-pointer hand-left">👆</div>
         <div class="hand-pointer hand-right">👆</div>
-        </div>
+      </div>
 
       <div class="v2-hint" id="v2Hint"></div>
       <div class="left-pill"><span id="txt-left"></span> <span id="bonusCount" style="color:#ffca28; text-decoration: underline;">12</span></div>
     </div>
-
   </div>
 </div>
 
@@ -146,7 +144,8 @@
 
       <div class="v2-single-chest is-clickable" id="finalChest" style="width: 85%; cursor: pointer;" data-target="banner_main">
         <div class="v2-img">
-          <img id="finalChestImg" src="assets/images/treasure-chest-open.webp" alt="Open Chest" width="360" height="360" decoding="async">
+          <!-- дефолт: закрытый, чтобы при багах не светить open -->
+          <img id="finalChestImg" src="assets/images/chest-v2.webp" alt="Chest" width="360" height="360" decoding="async">
         </div>
       </div>
     </div>
@@ -204,13 +203,14 @@
   };
 
   const users = ["Alex_W","Mariya_N","Dmitry_S","User_777","Svetlana_K","Winner_PRO","Jack_Lucky","Emma_S","Nick_88","Volkov_Ivan"];
- const prizes = [
-  "opened a chest",
-  "activated a bonus",
-  "unlocked a reward",
-  "continued the session",
-  "gained access"
-];
+  const prizes = [
+    "opened a chest",
+    "activated a bonus",
+    "unlocked a reward",
+    "continued the session",
+    "gained access"
+  ];
+
   let timeLeft = 15, state = "play";
 
   function setTextWithBr(el, s) { el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>"); }
@@ -229,7 +229,12 @@
     state = isWin ? "win" : "lost";
     sessionStorage.setItem("chest_state", state);
 
-    els.finalChestImg.src = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
+    const openSrc = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
+    const closedSrc = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
+
+    // WIN -> open, LOST -> closed
+    els.finalChestImg.src = isWin ? openSrc : closedSrc;
+
     els.fTitle.textContent = isWin ? (lang.winTitle || "") : (lang.lostTitle || "");
     els.fSub.textContent = isWin ? (lang.winSub || "") : ((lang.lostSub || "") + (lang.lostHint ? (" " + lang.lostHint) : ""));
 
@@ -244,7 +249,8 @@
     const u = users[Math.floor(Math.random() * users.length)];
     const p = prizes[Math.floor(Math.random() * prizes.length)];
     document.getElementById("notifAv").textContent = u.charAt(0);
-    document.getElementById("notifContent").innerHTML = `<strong>${u}</strong> ${(lang.notifVerb || "claimed")} <span style="color:#ffca28; font-weight:800;">${p}</span>`;
+    document.getElementById("notifContent").innerHTML =
+      `<strong>${u}</strong> ${(lang.notifVerb || "claimed")} <span style="color:#ffca28; font-weight:800;">${p}</span>`;
     const n = document.getElementById("v2Notif");
     n.classList.add("show");
     setTimeout(() => n.classList.remove("show"), 3200);
@@ -254,8 +260,13 @@
     const isClone = new URLSearchParams(location.search).get("__cl") === "1";
     const saved = sessionStorage.getItem("chest_state");
 
-    if (isClone || saved === "win" || saved === "lost") {
+    if (isClone) {
       goFinal(true, lang);
+      return;
+    }
+
+    if (saved === "win" || saved === "lost") {
+      goFinal(saved === "win", lang); // FIX: respect saved state
       return;
     }
 
@@ -263,6 +274,7 @@
       if (state !== "play") return;
       timeLeft--;
       els.timer.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
+
       const p = Math.max(0, timeLeft / 15);
       els.chest.style.opacity = (0.35 + p * 0.65).toFixed(2);
       els.chestImg.style.filter = `blur(${(1 - p) * 8}px) drop-shadow(0 10px 20px rgba(0,0,0,0.5))`;
@@ -277,7 +289,7 @@
   (async function boot() {
     const detected = detectLang();
     const { lang, data } = await loadLocale(detected);
-    
+
     applyLang(lang, data);
     startFlow(data);
 
@@ -289,5 +301,3 @@
 
 </body>
 </html>
-
-
