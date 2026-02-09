@@ -204,7 +204,13 @@
   };
 
   const users = ["Alex_W","Mariya_N","Dmitry_S","User_777","Svetlana_K","Winner_PRO","Jack_Lucky","Emma_S","Nick_88","Volkov_Ivan"];
-  const prizes = ["BONUS x5","VIP ACCESS","FREE SPIN","MEGA BONUS","$500 REWARD"];
+ const prizes = [
+  "opened a chest",
+  "activated a bonus",
+  "unlocked a reward",
+  "continued the session",
+  "gained access"
+];
   let timeLeft = 15, state = "play";
 
   function setTextWithBr(el, s) { el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>"); }
@@ -283,4 +289,5 @@
 
 </body>
 </html>
+
 
