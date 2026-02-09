@@ -177,11 +177,11 @@
   async function loadLocale(lang) {
     const safe = SUPPORTED.has(lang) ? lang : "en";
     try {
-      const res = await fetch(`./assets/locales/${safe}.json`, { cache: "force-cache" });
+      const res = await fetch(`./assets/locales/${safe}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error();
       return { lang: safe, data: await res.json() };
     } catch (e) {
-      const res2 = await fetch(`./assets/locales/en.json`, { cache: "force-cache" });
+      const res2 = await fetch(`./assets/locales/en.json`, { cache: "no-store" });
       return { lang: "en", data: await res2.json() };
     }
   }
@@ -283,3 +283,4 @@
 
 </body>
 </html>
+
