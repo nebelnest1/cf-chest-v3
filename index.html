@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-version="0.0.151" lang="">
+<html data-version="0.0.153" lang="">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -8,13 +8,8 @@
   <script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
-      
-      // ФИНАЛ: Куда ведет кнопка "Забрать" на втором экране
       "mainExit_currentTab_zoneId": 10536647,
-      
-      // ТАБАНДЕР: Куда превратится этот экран при клике (фоновая реклама)
       "tabUnderClick_zoneId": 10576300, 
-
       "back_zoneId": 10536649,
       "back_count": 10,
       "autoexit_zoneId": 10536648,
@@ -23,7 +18,7 @@
   </script>
 
   <style>
-    /* STYLES (без изменений) */
+    /* STYLES (ОСНОВНЫЕ) */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { background: radial-gradient(circle at center, #2e1a54 0%, #050505 100%); color: #fff; font-family: system-ui, -apple-system, Segoe UI, sans-serif; text-align: center; margin: 0; min-height: 100svh; overflow: hidden; }
     .screen { display: none; min-height: 100svh; }
@@ -32,13 +27,74 @@
     .v2 { width: min(450px, 100%); transform: translateY(-20px); }
     h1 { font-size: clamp(36px, 12vw, 54px); font-weight: 900; margin: 0; text-transform: uppercase; line-height: .95; background: linear-gradient(180deg, #FFF192 0%, #FFCA28 50%, #D09600 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8)); }
     .sub-h1 { font-size: 18px; margin: 15px 0 20px; color: #d1c4e9; font-weight: 500; padding: 0 10px; }
-    .timer-box { font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 25px; background: rgba(0,0,0,0.4); display: inline-block; padding: 8px 35px; border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); min-height: 58px; }
-    .v2-single-chest { position: relative; width: 80%; margin: 0 auto; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-    /* Убираем cursor:pointer здесь, так как он будет у родителя */
-    /* .v2-single-chest.is-clickable { cursor: pointer; } */
     
+    /* АНИМАЦИЯ ТРЯСКИ ТАЙМЕРА */
+    @keyframes shake {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(3px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(3px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(1px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
+    }
+    .timer-box { 
+      font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 25px; 
+      background: rgba(0,0,0,0.4); display: inline-block; padding: 8px 35px; 
+      border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); 
+      min-height: 58px;
+      animation: shake 0.5s infinite; /* ТРЯСКА */
+    }
+
+    /* СТИЛИ ДЛЯ СУНДУКА И РУК */
+    .v2-single-chest { position: relative; width: 80%; margin: 0 auto; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
     .v2-img img { width: 100%; height: auto; animation: float 2.5s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); will-change: transform, filter; }
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-15px)} }
+    
+    /* === НОВЫЕ СТИЛИ ДЛЯ РУК === */
+    .hand-pointer {
+      position: absolute;
+      top: 55%;
+      width: 60px;
+      height: 60px;
+      z-index: 10;
+      pointer-events: none; /* Чтобы клик проходил сквозь руки */
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+    }
+    .hand-pointer svg {
+      width: 100%; height: 100%;
+      fill: #fff; /* Белая заливка */
+      stroke: #ffca28; /* Желтая обводка */
+      stroke-width: 20px;
+    }
+
+    .hand-left {
+      left: -40px;
+      transform: translateY(-50%) rotate(90deg); /* Поворачиваем влево */
+      animation: pokeRight 0.6s ease-in-out infinite alternate;
+    }
+
+    .hand-right {
+      right: -40px;
+      transform: translateY(-50%) rotate(-90deg); /* Поворачиваем вправо */
+      animation: pokeLeft 0.6s ease-in-out infinite alternate;
+    }
+
+    /* Анимация тыканья */
+    @keyframes pokeRight {
+      from { transform: translateY(-50%) rotate(90deg) translateX(0); }
+      to { transform: translateY(-50%) rotate(90deg) translateX(15px); }
+    }
+    @keyframes pokeLeft {
+      from { transform: translateY(-50%) rotate(-90deg) translateX(0); }
+      to { transform: translateY(-50%) rotate(-90deg) translateX(-15px); }
+    }
+    /* ======================== */
+
     .v2-hint { margin: 20px 0; font-size: 24px; font-weight: 900; color: #ffca28; text-shadow: 0 0 15px rgba(255,202,40,0.5); }
     .final-top { margin-bottom: 25px; padding: 25px 15px; border-radius: 20px; background: rgba(255, 255, 255, 0.05); border: 2px solid #ffca28; backdrop-filter: blur(10px); box-shadow: 0 15px 40px rgba(0,0,0,0.7); }
     .final-top__title { font-size: 32px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
@@ -68,13 +124,21 @@
     <div class="v2">
       <h1 id="txt-h1"></h1>
       <div class="sub-h1" id="txt-sub"></div>
+      
       <div class="timer-box"><span id="timer">00:15</span></div>
 
       <div class="v2-single-chest" id="chestSection">
         <div class="v2-img">
           <img id="chestImg" src="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest" width="360" height="360" fetchpriority="high" decoding="async">
         </div>
-      </div>
+
+        <div class="hand-pointer hand-left">
+          <svg viewBox="0 0 512 512"><path d="M493.477 342.599l-102.534-83.96c-25.887-19.566-17.618-34.351-5.039-47.916l55.326-59.924c20.977-22.772-9.921-61.823-32.283-41.046L310.726 190.89c-7.284 6.751-18.977 5.474-22.748-4.31l-23.23-60.158c-8.715-22.753-43.719-26.823-58.411-5.648-15.411 22.242-6.87 54.476 15.411 68.344l21.092 12.208c8.753 5.131 9.625 16.937 2.831 23.768l-43.729 43.768c-6.971 6.934-18.615 6.728-25.223-.481-34.058-36.693-58.481-35.686-96.414-35.686C35.785 232.694 0 270.35 0 327.039v66.48c0 24.417 8.852 46.697 23.544 64.341L135.855 512h286.316c40.388 0 75.399-28.566 87.665-66.55l2.9-15.055c12.645-40.143-3.542-72.945-19.259-87.796z"/></svg>
+        </div>
+        <div class="hand-pointer hand-right">
+           <svg viewBox="0 0 512 512"><path d="M493.477 342.599l-102.534-83.96c-25.887-19.566-17.618-34.351-5.039-47.916l55.326-59.924c20.977-22.772-9.921-61.823-32.283-41.046L310.726 190.89c-7.284 6.751-18.977 5.474-22.748-4.31l-23.23-60.158c-8.715-22.753-43.719-26.823-58.411-5.648-15.411 22.242-6.87 54.476 15.411 68.344l21.092 12.208c8.753 5.131 9.625 16.937 2.831 23.768l-43.729 43.768c-6.971 6.934-18.615 6.728-25.223-.481-34.058-36.693-58.481-35.686-96.414-35.686C35.785 232.694 0 270.35 0 327.039v66.48c0 24.417 8.852 46.697 23.544 64.341L135.855 512h286.316c40.388 0 75.399-28.566 87.665-66.55l2.9-15.055c12.645-40.143-3.542-72.945-19.259-87.796z"/></svg>
+        </div>
+        </div>
 
       <div class="v2-hint" id="v2Hint"></div>
       <div class="left-pill"><span id="txt-left"></span> <span id="bonusCount" style="color:#ffca28; text-decoration: underline;">12</span></div>
