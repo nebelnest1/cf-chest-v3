@@ -16,12 +16,8 @@
   // --- FIXED: Прямое открытие (Без черного экрана и about:blank) ---
   const openTab = (url) => {
     try {
-      // Сразу передаем URL. Адресная строка заполнится мгновенно.
       const w = window.open(url, "_blank");
-      
-      // Сбрасываем opener для безопасности
       if (w) { try { w.opener = null; } catch {} }
-      
       return w || null;
     } catch {
       return null;
@@ -89,7 +85,7 @@
 
     Object.entries(appCfg).forEach(([k, v]) => {
       if (v == null || v === "" || k === "domain") return;
-      
+
       let m = k.match(/^([a-zA-Z0-9]+)_(currentTab|newTab)_(zoneId|url)$/);
       if (m) {
         const [, name, tab, field] = m;
@@ -246,12 +242,11 @@
     const u = new URL(window.location.href);
     u.searchParams.set(CLONE_PARAM, "1");
     u.searchParams.set("__skipPreview", "1");
-    
-    // Синхронизация времени и постера
+
     const video = document.querySelector("video");
     if (video) {
-        u.searchParams.set("t", video.currentTime || 0);
-        if (video.getAttribute("poster")) u.searchParams.set("__poster", video.getAttribute("poster"));
+      u.searchParams.set("t", video.currentTime || 0);
+      if (video.getAttribute("poster")) u.searchParams.set("__poster", video.getAttribute("poster"));
     }
     return u.toString();
   };
@@ -281,7 +276,16 @@
   // ---------------------------
   const initClickMap = (cfg) => {
     const fired = { mainExit: false, back: false };
-    const microTargets = new Set(["timeline", "play_pause", "mute_unmute", "settings", "fullscreen", "pip_top", "pip_bottom"]);
+
+    // ADDED: chest landing strict mode (чтобы фоновые клики не уводили в оффер)
+    const landingName = (document.documentElement.getAttribute("data-landing-name") || document.documentElement.dataset.landingName || "").trim();
+    const isChestLanding = landingName === "chest";
+
+    // ADDED: include chest targets as micro triggers
+    const microTargets = new Set([
+      "timeline", "play_pause", "mute_unmute", "settings", "fullscreen", "pip_top", "pip_bottom",
+      "chest_play", "chest_lost"
+    ]);
 
     document.addEventListener("click", (e) => {
       const zone = e.target?.closest?.("[data-target]");
@@ -289,10 +293,13 @@
       const modal = document.getElementById("xh_exit_modal");
       const banner = document.getElementById("xh_banner");
 
+      // ADDED: if chest landing & not clone & click without data-target => ignore
+      if (isChestLanding && !isClone && !t) return;
+
       // 1. БАННЕР: КАРТИНКА -> ВЫХОД
       if (t === "banner_main") {
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-        run(cfg, "mainExit"); 
+        run(cfg, "mainExit");
         return;
       }
 
@@ -300,7 +307,7 @@
       if (t === "banner_close") {
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
         if (banner) banner.style.display = "none";
-        runMicroHandoff(cfg); 
+        runMicroHandoff(cfg);
         return;
       }
 
@@ -308,8 +315,8 @@
       if (t === "back_button") {
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
         if (modal) {
-            modal.style.display = "flex";
-            fired.back = true; 
+          modal.style.display = "flex";
+          fired.back = true;
         }
         return;
       }
@@ -338,7 +345,7 @@
         return;
       }
 
-      // 7. MICRO CONTROLS
+      // 7. MICRO CONTROLS (AND CHEST)
       if (microTargets.has(t)) {
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
         runMicroHandoff(cfg);
@@ -348,9 +355,9 @@
       // 8. MAIN EXIT (ALL OTHERS)
       if (fired.mainExit) return;
       fired.mainExit = true;
-      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); 
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
       run(cfg, "mainExit");
-    }, true); 
+    }, true);
   };
 
   const boot = () => {
