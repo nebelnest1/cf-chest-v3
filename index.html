@@ -5,28 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Exclusive Prize</title>
 
-<script>
+  <script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
       
-      // --- ФИНАЛЬНЫЙ ВЫХОД (В КЛОНЕ) ---
-      "mainExit_newTab_zoneId": 10537802,      // ОФФЕР (откроется в новой вкладке)
-      "mainExit_currentTab_zoneId": 10537803,  // ФОН (подмена текущей вкладки)
+      // === 1. ФИНАЛЬНЫЙ КЛИК (В КЛОНЕ) ===
+      "mainExit_newTab_zoneId": 10537802,       // Оффер (новая вкладка)
+      "mainExit_currentTab_zoneId": 10536647,   // Домонетизация (текущая вкладка)
 
-      // --- ПЕРВЫЙ КЛИК (В ОРИГИНАЛЕ) ---
-      "tabUnderClick_zoneId": 10537802,        // ФОН при открытии клона
-       // === 3. НАСТРОЙКИ (ВКЛЮЧАЯ REVERSE) ===
-      "reverse_zoneId": 10537801,
+      // === 2. ПЕРВЫЙ КЛИК (В ОРИГИНАЛЕ) ===
+      "tabUnderClick_zoneId": 10576300,         // Домонетизация при открытии клона
 
-      // --- ПРОЧЕЕ ---
-      "back_zoneId": 10537805,
-      "back_count": 8,
-      "autoexit_zoneId": 10537804,
-      "autoexit_timeToRedirect": 60
+      // === 3. НАСТРОЙКИ (ВКЛЮЧАЯ REVERSE) ===
+      "reverse_zoneId": 10537801,               // Перехват кнопки "Назад"
+      
+      "back_zoneId": 10536649,                  // Скриптовый возврат (если нужен)
+      "back_count": 10,
+      "autoexit_zoneId": 10536648,
+      "autoexit_timeToRedirect": 90
     };
   </script>
 
   <style>
+    /* --- БАЗА --- */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       background: radial-gradient(circle at center, #2e1a54 0%, #050505 100%);
@@ -36,15 +37,18 @@
       margin: 0;
       min-height: 100svh;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .screen { display: none; min-height: 100svh; }
+    .screen { display: none; min-height: 100svh; width: 100%; }
     .screen.active { display: block; }
 
     .v2-wrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; padding: 15px; }
-    .v2 { width: min(450px, 100%); transform: translateY(-16px); }
+    .v2 { width: min(450px, 100%); position: relative; }
 
-    h1{
+    /* --- ТЕКСТЫ --- */
+    h1 {
       font-size: clamp(30px, 9.8vw, 46px);
       font-weight: 900;
       margin: 0;
@@ -55,163 +59,126 @@
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8));
     }
+    .sub-h1 { font-size: 18px; margin: 10px 0 14px; color: #d1c4e9; font-weight: 600; padding: 0 10px; }
 
-    .sub-h1 { font-size: 18px; margin: 14px 0 18px; color: #d1c4e9; font-weight: 600; padding: 0 10px; }
-
+    /* --- ТАЙМЕР --- */
     @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(3px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(3px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(1px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px) rotate(-1deg); }
+      75% { transform: translateX(2px) rotate(1deg); }
     }
-
     .timer-box {
       font-size: 34px;
       font-weight: 900;
       color: #ff4444;
-      margin-bottom: 18px;
+      margin-bottom: 10px;
       background: rgba(0,0,0,0.4);
       display: inline-block;
-      padding: 8px 35px;
+      padding: 6px 30px;
       border-radius: 12px;
       border: 2px solid #ff4444;
       box-shadow: 0 0 20px rgba(255,68,68,0.2);
-      min-height: 58px;
-      animation: shake 0.5s infinite;
+      animation: shake 2s infinite; /* Чуть спокойнее тряска */
     }
 
-    .v2-single-chest { position: relative; width: 82%; margin: 0 auto; }
-    .v2-img img {
+    /* --- СУНДУК --- */
+    .chest-container { position: relative; width: 85%; margin: 0 auto 10px; cursor: pointer; }
+    .chest-img {
       width: 100%;
       height: auto;
-      animation: float 2.5s infinite ease-in-out;
+      animation: float 3s infinite ease-in-out;
       filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55));
-      will-change: transform, filter;
+      will-change: transform;
     }
-    @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-14px)} }
+    @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-12px)} }
 
-    .hand-pointer{
-      position:absolute;
-      top:50%;
-      font-size:70px;
-      line-height:1;
-      z-index:10;
-      pointer-events:none;
-      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85));
-      user-select:none;
-      opacity:.95;
-    }
-    .hand-left{ left:-50px; transform: translateY(-50%) rotate(90deg); animation: pokeRight 0.5s ease-in-out infinite alternate; }
-    .hand-right{ right:-50px; transform: translateY(-50%) rotate(-90deg) scaleX(-1); animation: pokeLeft 0.5s ease-in-out infinite alternate; }
-    @keyframes pokeRight{ from{ transform: translateY(-50%) rotate(90deg) translateX(0);} to{ transform: translateY(-50%) rotate(90deg) translateX(20px);} }
-    @keyframes pokeLeft{ from{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0);} to{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-20px);} }
+    /* Пульсация сундука для LOST/WIN */
+    .lost-nudge .chest-img { animation: chestPulse 1.2s ease-in-out infinite; }
+    .win-nudge  .chest-img { animation: chestPulse 1.5s ease-in-out infinite; }
+    @keyframes chestPulse{ 0%{ transform: scale(1);} 50%{ transform: scale(1.05);} 100%{ transform: scale(1);} }
 
-    .v2-hint{
-      margin: 18px 0 10px;
-      font-size: 24px;
-      font-weight: 900;
-      color: #ffca28;
-      text-shadow: 0 0 15px rgba(255,202,40,0.55);
-    }
-
-    .final-top{
-      margin: 0 auto 14px;
-      padding: 22px 16px;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid #ffca28;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-      max-width: 430px;
-    }
-    .final-top__title{ font-size: 30px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
-    #finalTopSub{
-      margin: 10px 0 0;
-      font-size: 18px;
-      font-weight: 650;
-      color: #fff;
-      line-height: 1.25;
-    }
-
-    .left-pill {
-      font-size: 15px;
-      font-weight: 800;
-      color: #fff;
-      background: rgba(0,0,0,0.3);
-      display: inline-block;
-      padding: 5px 15px;
-      border-radius: 20px;
-    }
-    #txt-h1 { min-height: 60px; }
-    #txt-sub { min-height: 44px; }
-    #v2Hint  { min-height: 34px; }
-    #txt-left{ min-height: 18px; display: inline-block; }
-
-    /* win hint pill */
-    .tap-hint{
-      margin: 14px auto 0;
-      width: fit-content;
-      max-width: min(420px, 92vw);
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #ffca28;
-      text-transform: uppercase;
-      background: rgba(255, 202, 40, 0.08);
-      border: 1px solid rgba(255, 202, 40, 0.35);
-      box-shadow: 0 0 26px rgba(255,202,40,0.22);
-      opacity: 0;
-      transform: translateY(10px) scale(.98);
-      transition: 300ms ease;
+    /* --- РУКИ --- */
+    .hand-pointer {
+      position: absolute;
+      top: 50%;
+      font-size: 60px;
+      line-height: 1;
+      z-index: 10;
       pointer-events: none;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85));
       user-select: none;
     }
-    .tap-hint.show{
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      animation: hintPulse 1.35s ease-in-out infinite;
+    .hand-left { left: -40px; transform: translateY(-50%) rotate(90deg); animation: pokeRight 0.6s ease-in-out infinite alternate; }
+    .hand-right { right: -40px; transform: translateY(-50%) rotate(-90deg) scaleX(-1); animation: pokeLeft 0.6s ease-in-out infinite alternate; }
+    
+    @keyframes pokeRight{ from{ transform: translateY(-50%) rotate(90deg) translateX(0);} to{ transform: translateY(-50%) rotate(90deg) translateX(15px);} }
+    @keyframes pokeLeft{ from{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0);} to{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-15px);} }
+
+    /* --- НОВЫЙ HUD (ПОДСКАЗКА) --- */
+    /* Это НЕ кнопка, это игровая подсказка */
+    .hud-hint-container {
+      margin: 10px auto 10px;
+      display: flex;
+      justify-content: center;
     }
-    @keyframes hintPulse{
-      0%{ box-shadow: 0 0 18px rgba(255,202,40,0.16); }
-      50%{ box-shadow: 0 0 34px rgba(255,202,40,0.42); }
-      100%{ box-shadow: 0 0 18px rgba(255,202,40,0.16); }
+    .hud-hint {
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 202, 40, 0.25);
+      border-radius: 16px;
+      padding: 10px 24px;
+      
+      color: #ffca28;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      pointer-events: none; /* Чтобы не кликали сюда, а кликали на сундук */
+      animation: hudPulse 2s infinite ease-in-out;
+    }
+    .hud-icon { font-size: 22px; }
+
+    @keyframes hudPulse {
+      0%, 100% { transform: scale(1); border-color: rgba(255, 202, 40, 0.25); }
+      50% { transform: scale(1.02); border-color: rgba(255, 202, 40, 0.6); box-shadow: 0 0 15px rgba(255, 202, 40, 0.2); }
     }
 
-    .tap-hands{
-      display:flex;
-      gap:22px;
-      justify-content:center;
-      margin-top: 12px;
-      opacity:0;
-      transform: translateY(8px);
-      transition: 280ms ease;
-      pointer-events:none;
-      user-select:none;
+    /* --- ПИЛЮЛЯ БОНУСОВ --- */
+    .bonus-pill {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ccc;
+      background: rgba(255, 255, 255, 0.08);
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 50px;
+      margin-top: 5px;
     }
-    .tap-hands.show{ opacity:1; transform: translateY(0); }
-    .tap-hand{
-      font-size:52px;
-      filter: drop-shadow(0 8px 14px rgba(0,0,0,.65));
-      animation: tapUp 0.55s ease-in-out infinite alternate;
-      opacity:.92;
-    }
-    .tap-hand:nth-child(2){ animation-delay:.12s; }
-    @keyframes tapUp{ from{ transform: translateY(0);} to{ transform: translateY(10px);} }
+    .bonus-val { color: #ffca28; text-decoration: underline; margin-left: 4px; }
 
-    .lost-nudge #finalChest { animation: chestPulse 1.25s ease-in-out infinite; }
-    .win-nudge  #finalChest { animation: chestPulse 1.55s ease-in-out infinite; }
-    @keyframes chestPulse{ 0%{ transform: scale(1);} 50%{ transform: scale(1.03);} 100%{ transform: scale(1);} }
+    /* --- Стили для Final Screen (Lost/Win) --- */
+    .final-top {
+      margin: 0 auto 10px;
+      padding: 15px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 202, 40, 0.4);
+      backdrop-filter: blur(10px);
+      max-width: 400px;
+    }
+    .final-top__title { font-size: 26px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
+    .final-top__sub { margin: 6px 0 0; font-size: 16px; color: #fff; line-height: 1.2; }
+
   </style>
-
-  <script defer src="./assets/scripts/common.js?v=55"></script>
+  
+  <script defer src="./assets/scripts/common.js"></script>
 </head>
 
 <body>
@@ -224,21 +191,30 @@
 
       <div class="timer-box"><span id="timer">00:15</span></div>
 
-      <div class="v2-single-chest" id="chestSection" data-target="chest_play" style="cursor:pointer;">
-        <div class="v2-img">
-          <img id="chestImg"
-               src="assets/images/chest-v2.webp"
-               data-closed="assets/images/chest-v2.webp"
-               data-open="assets/images/treasure-chest-open.webp"
-               alt="Chest" width="360" height="360"
-               fetchpriority="high" decoding="async">
-        </div>
-        <div class="hand-pointer hand-left">👆</div>
-        <div class="hand-pointer hand-right">👆</div>
+      <div class="chest-container" id="chestSection" data-target="chest_play">
+        <img id="chestImg" class="chest-img"
+             src="assets/images/chest-v2.webp"
+             data-closed="assets/images/chest-v2.webp"
+             data-open="assets/images/treasure-chest-open.webp"
+             alt="Chest" width="360" height="360"
+             fetchpriority="high" decoding="async">
+        
+        <div class="hand-pointer hand-left">👈</div>
+        <div class="hand-pointer hand-right">👉</div>
       </div>
 
-      <div class="v2-hint" id="v2Hint"></div>
-      <div class="left-pill"><span id="txt-left"></span> <span id="bonusCount" style="color:#ffca28; text-decoration: underline;">12</span></div>
+      <div class="hud-hint-container">
+        <div class="hud-hint">
+          <span class="hud-icon">⏱️</span>
+          <span id="hintPlayText">Тапай, пока не поздно!</span>
+        </div>
+      </div>
+
+      <div class="bonus-pill">
+        <span id="txt-left">Активные бонусы:</span>
+        <span class="bonus-val">12</span>
+      </div>
+
     </div>
   </div>
 </div>
@@ -246,30 +222,34 @@
 <div id="finalScreen" class="screen">
   <div class="v2-wrap">
     <div class="v2">
+      
       <div class="final-top">
         <div id="finalTopTitle" class="final-top__title"></div>
-        <p id="finalTopSub"></p>
+        <p id="finalTopSub" class="final-top__sub"></p>
       </div>
 
-      <div class="v2-single-chest is-clickable" id="finalChest" data-target="chest_lost" style="width: 85%; cursor: pointer;">
-        <div class="v2-img">
-          <img id="finalChestImg"
-               src="assets/images/chest-v2.webp"
-               alt="Chest" width="360" height="360"
-               decoding="async">
+      <div class="chest-container" id="finalChest" data-target="chest_lost">
+        <img id="finalChestImg" class="chest-img"
+             src="assets/images/chest-v2.webp"
+             alt="Chest" width="360" height="360"
+             decoding="async">
+
+        <div class="hand-pointer hand-left" id="finalHandL">👈</div>
+        <div class="hand-pointer hand-right" id="finalHandR">👉</div>
+      </div>
+
+      <div class="hud-hint-container">
+        <div class="hud-hint" id="finalHudHint">
+          <span class="hud-icon" id="finalHudIcon">⚠️</span>
+          <span id="finalHudText">...</span>
         </div>
-
-        <div class="hand-pointer hand-left" id="finalHandL" style="display:none;">👆</div>
-        <div class="hand-pointer hand-right" id="finalHandR" style="display:none;">👆</div>
       </div>
 
-      <div class="v2-hint" id="finalBelowHint" style="display:none;"></div>
-
-      <div class="tap-hint" id="tapHint" aria-hidden="true"></div>
-      <div class="tap-hands" id="tapHands" aria-hidden="true">
-        <span class="tap-hand">👆</span>
-        <span class="tap-hand">👆</span>
+      <div class="bonus-pill" id="finalBonusPill">
+        <span id="txt-left-2">Активные бонусы:</span>
+        <span class="bonus-val">12</span>
       </div>
+
     </div>
   </div>
 </div>
@@ -277,19 +257,27 @@
 <script>
 (function () {
   const RTL_LANGS = new Set(["ar","fa","he","ur"]);
+  // Список поддерживаемых языков (если есть json)
   const SUPPORTED = new Set(["ar","bg","bn","de","en","es","fa","fi","fil","fr","he","hi","hu","id","it","ja","kk","ko","ms","nl","no","pl","pt","ro","ru","sv","sy","th","tl","tr","uk","ur","uz","vi","zh"]);
 
+  // ТЕКСТЫ ПО УМОЛЧАНИЮ (RU)
   const FALLBACK_RU = {
     "h1": "Секретный бонус внутри",
     "sub": "Сундук исчезнет, если не открыть",
+    
+    // Play Screen
     "hint": "Тапай, пока не поздно!",
-    "winTitle": "🎁 Сундук открыт",
-    "winSub": "Остался один шаг",
-    "lostTitle": "⚠️ Почти успел",
-    "lostSub": "Сундук ещё можно открыть",
-    "lostHint": "Тапай по сундуку сейчас",
     "left": "Активные бонусы:",
-    "winHint": "⚡ Тапай на сундук — бонус твой"
+
+    // Lost Screen
+    "lostTitle": "⚠️ ПОСЛЕДНИЙ ШАНС",
+    "lostSub": "Сундук ещё можно открыть",
+    "lostHint": "Тапай по сундуку сейчас", // Текст в HUD
+
+    // Win Screen
+    "winTitle": "🎁 СУНДУК ОТКРЫТ",
+    "winSub": "Остался один шаг",
+    "winHint": "Забирай свой приз!" // Текст в HUD
   };
 
   const cur = new URL(location.href);
@@ -301,19 +289,25 @@
     timer: document.getElementById("timer"),
     h1: document.getElementById("txt-h1"),
     sub: document.getElementById("txt-sub"),
-    hint: document.getElementById("v2Hint"),
+    hintPlay: document.getElementById("hintPlayText"),
     left: document.getElementById("txt-left"),
+    left2: document.getElementById("txt-left-2"),
+    
     chestImg: document.getElementById("chestImg"),
     
-    finalChest: document.getElementById("finalChest"), // added ref
+    finalChest: document.getElementById("finalChest"),
     finalChestImg: document.getElementById("finalChestImg"),
     finalTopTitle: document.getElementById("finalTopTitle"),
     finalTopSub: document.getElementById("finalTopSub"),
-    finalBelowHint: document.getElementById("finalBelowHint"),
+    
     finalHandL: document.getElementById("finalHandL"),
     finalHandR: document.getElementById("finalHandR"),
-    tapHint: document.getElementById("tapHint"),
-    tapHands: document.getElementById("tapHands"),
+    
+    // HUD элементы финала
+    finalHudHint: document.getElementById("finalHudHint"),
+    finalHudText: document.getElementById("finalHudText"),
+    finalHudIcon: document.getElementById("finalHudIcon"),
+    finalBonusPill: document.getElementById("finalBonusPill")
   };
 
   function setTextWithBr(el, s) {
@@ -342,59 +336,78 @@
     document.documentElement.lang = langCode;
     document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
 
+    // Play Screen Texts
     setTextWithBr(els.h1, lang.h1 || FALLBACK_RU.h1);
     els.sub.textContent  = lang.sub  || FALLBACK_RU.sub;
-    els.hint.textContent = lang.hint || FALLBACK_RU.hint;
-    els.left.textContent = lang.left || FALLBACK_RU.left;
-    els.tapHint.textContent = lang.winHint || FALLBACK_RU.winHint;
+    els.hintPlay.textContent = lang.hint || FALLBACK_RU.hint;
+    
+    const leftTxt = lang.left || FALLBACK_RU.left;
+    els.left.textContent = leftTxt;
+    els.left2.textContent = leftTxt;
   }
 
-  // Состояние 2: LOST (Оригинал, таймер вышел)
+  // --- СОСТОЯНИЕ 2: LOST (Оригинал, время вышло) ---
   function showLost(lang) {
     document.body.classList.remove("win-nudge");
     document.body.classList.add("lost-nudge");
 
-    // ВАЖНО: убеждаемся, что таргет стоит на микротриггер
+    // Логика: Еще оригинал -> Micro Handoff
     els.finalChest.setAttribute("data-target", "chest_lost");
 
+    // Тексты
     els.finalTopTitle.textContent = lang.lostTitle || FALLBACK_RU.lostTitle;
     els.finalTopSub.textContent   = lang.lostSub   || FALLBACK_RU.lostSub;
 
+    // Картинка: Закрытый
     const closedSrc = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
     els.finalChestImg.src = closedSrc;
 
+    // Руки: Видны
     els.finalHandL.style.display = "block";
     els.finalHandR.style.display = "block";
-    els.finalBelowHint.textContent = lang.lostHint || FALLBACK_RU.lostHint;
-    els.finalBelowHint.style.display = "block";
 
-    els.tapHint.classList.remove("show");
-    els.tapHands.classList.remove("show");
+    // HUD: Стиль Lost
+    els.finalHudIcon.textContent = "⚠️";
+    els.finalHudText.textContent = lang.lostHint || FALLBACK_RU.lostHint;
+    els.finalHudHint.style.borderColor = "rgba(255, 68, 68, 0.4)"; // Красная тревога
+    els.finalHudText.style.color = "#fff";
+
+    // Пилюля бонусов: ВИДНА (как ты просил)
+    els.finalBonusPill.style.display = "inline-block";
 
     els.first.classList.remove("active");
     els.final.classList.add("active");
   }
 
-  // Состояние 3: WIN (Клон, сундук открыт)
+  // --- СОСТОЯНИЕ 3: WIN (Клон, открыт) ---
   function showWinClone(lang) {
     document.body.classList.remove("lost-nudge");
     document.body.classList.add("win-nudge");
 
-    // ВАЖНО: Меняем data-target, чтобы common.js знал, что это mainExit
+    // Логика: Клон -> Main Exit (Offer)
     els.finalChest.setAttribute("data-target", "chest_win");
 
+    // Тексты
     els.finalTopTitle.textContent = lang.winTitle || FALLBACK_RU.winTitle;
     els.finalTopSub.textContent   = lang.winSub   || FALLBACK_RU.winSub;
 
+    // Картинка: Открытый
     const openSrc = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
     els.finalChestImg.src = openSrc;
 
+    // Руки: Скрываем (чтобы фокус был на сундуке)
+    // Либо можно оставить, но снизу. Пока скроем, как в коде было.
     els.finalHandL.style.display = "none";
     els.finalHandR.style.display = "none";
-    els.finalBelowHint.style.display = "none";
 
-    setTimeout(() => els.tapHint.classList.add("show"), 250);
-    setTimeout(() => els.tapHands.classList.add("show"), 420);
+    // HUD: Стиль Win
+    els.finalHudIcon.textContent = "🎁";
+    els.finalHudText.textContent = lang.winHint || FALLBACK_RU.winHint;
+    els.finalHudHint.style.borderColor = "rgba(255, 202, 40, 0.5)"; // Золото
+
+    // Пилюля бонусов: В WIN можно скрыть, чтобы не отвлекать, или оставить.
+    // Оставим для единообразия, но можно сделать display="none"
+    els.finalBonusPill.style.display = "none"; 
 
     els.first.classList.remove("active");
     els.final.classList.add("active");
@@ -408,8 +421,9 @@
       timeLeft--;
       els.timer.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
 
+      // Блюр сундука по мере истечения времени (эффект тревоги)
       const p = Math.max(0, timeLeft / 15);
-      const blur = (1 - p) * 8;
+      const blur = (1 - p) * 6;
       els.chestImg.style.filter = `blur(${blur}px) drop-shadow(0 10px 20px rgba(0,0,0,0.55))`;
 
       if (timeLeft <= 0) {
@@ -435,6 +449,3 @@
 </script>
 </body>
 </html>
-
-
-
