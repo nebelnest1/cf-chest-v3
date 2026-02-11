@@ -24,7 +24,7 @@
   </script>
 
   <style>
-   /* --- БАЗА --- */
+    /* --- БАЗА --- */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       background: radial-gradient(circle at center, #2e1a54 0%, #050505 100%);
@@ -40,7 +40,6 @@
     .screen { display: none; min-height: 100svh; width: 100%; }
     .screen.active { display: block; }
     
-    /* Добавил gap, чтобы элементы не слипались в флексе */
     .v2-wrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; padding: 15px; }
     .v2 { width: min(450px, 100%); position: relative; display: flex; flex-direction: column; gap: 5px; }
 
@@ -52,16 +51,14 @@
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
     .timer-box { font-size: 34px; font-weight: 900; color: #ff4444; margin: 0 auto 5px; background: rgba(0,0,0,0.4); display: inline-block; padding: 6px 30px; border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); animation: shake 2s infinite; }
 
-    /* --- СУНДУК (БОЛЬШЕ ОТСТУПОВ!) --- */
+    /* --- СУНДУК --- */
     .chest-container { 
       position: relative; 
       width: 85%; 
-      /* margin: Сверху Сбоку Снизу Сбоку */
       margin: 20px auto 30px; 
       cursor: pointer; 
-      z-index: 5; /* Чтобы был выше рук и фона */
+      z-index: 5;
     }
-    
     .chest-img { width: 100%; height: auto; animation: float 3s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55)); will-change: transform; }
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-12px)} }
     .lost-nudge .chest-img { animation: chestPulse 1.2s ease-in-out infinite; }
@@ -70,74 +67,22 @@
 
     /* --- РУКИ (ИСПРАВЛЕНЫ) --- */
     .hand-pointer { position: absolute; top: 55%; font-size: 60px; line-height: 1; z-index: 10; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85)); user-select: none; }
-    
-    /* Левая рука: Слева, без поворота, двигается вправо */
-    .hand-left { 
-      left: -45px; 
-      transform: translateY(-50%); /* Только центровка по вертикали */
-      animation: pokeRight 0.8s ease-in-out infinite alternate; 
-    }
-    
-    /* Правая рука: Справа, без поворота, двигается влево */
-    .hand-right { 
-      right: -45px; 
-      transform: translateY(-50%); 
-      animation: pokeLeft 0.8s ease-in-out infinite alternate; 
-    }
-
-    /* Анимация тыканья в бок */
+    .hand-left { left: -45px; transform: translateY(-50%); animation: pokeRight 0.8s ease-in-out infinite alternate; }
+    .hand-right { right: -45px; transform: translateY(-50%); animation: pokeLeft 0.8s ease-in-out infinite alternate; }
     @keyframes pokeRight{ from{ transform: translateY(-50%) translateX(0);} to{ transform: translateY(-50%) translateX(15px);} }
     @keyframes pokeLeft{ from{ transform: translateY(-50%) translateX(0);} to{ transform: translateY(-50%) translateX(-15px);} }
 
-    /* --- БАББЛ (ОТСТУП СВЕРХУ) --- */
-    .hud-hint-container {
-      /* margin-top: отрицательный, если надо наехать, или положительный для отступа */
-      margin: 10px auto 5px; 
-      display: flex;
-      justify-content: center;
-      position: relative;
-      z-index: 20; /* Поверх всего */
-    }
-
+    /* --- БАББЛ (ХУД) --- */
+    .hud-hint-container { margin: 10px auto 5px; display: flex; justify-content: center; position: relative; z-index: 20; }
     .hud-hint {
-      position: relative;
-      background: rgba(0, 0, 0, 0.9); /* Чуть плотнее фон */
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      
-      border: 2px solid #ffca28;
-      border-radius: 24px;
-      padding: 12px 28px;
-      
-      color: #ffca28;
-      font-size: 18px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      pointer-events: none;
-      animation: bubbleFloat 2.5s infinite ease-in-out;
+      position: relative; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 2px solid #ffca28; border-radius: 24px; padding: 12px 28px;
+      color: #ffca28; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6); pointer-events: none; animation: bubbleFloat 2.5s infinite ease-in-out;
     }
-
-    .hud-hint::after {
-      content: '';
-      position: absolute;
-      top: -12px; left: 50%; transform: translateX(-50%);
-      border-width: 12px; border-style: solid; border-color: transparent transparent #ffca28 transparent; 
-    }
-
-    .hud-hint::before {
-      content: '';
-      position: absolute;
-      top: -9px; left: 50%; transform: translateX(-50%); z-index: 1;
-      border-width: 12px; border-style: solid; border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent; 
-    }
-
+    .hud-hint::after { content: ''; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); border-width: 12px; border-style: solid; border-color: transparent transparent #ffca28 transparent; }
+    .hud-hint::before { content: ''; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); z-index: 1; border-width: 12px; border-style: solid; border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent; }
     @keyframes bubbleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     .hud-icon { font-size: 24px; }
 
@@ -149,12 +94,53 @@
     .final-top { margin: 0 auto 10px; padding: 15px; border-radius: 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 202, 40, 0.4); backdrop-filter: blur(10px); max-width: 400px; }
     .final-top__title { font-size: 26px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
     .final-top__sub { margin: 6px 0 0; font-size: 16px; color: #fff; line-height: 1.2; }
+
+    /* --- NOTIFICATION (SOCIAL PROOF) --- */
+    .notify-toast {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px); /* Спрятан сверху */
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid #4CAF50; /* Зеленая обводка (успех) */
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: max-content;
+      max-width: 90%;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    .notify-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .notify-icon {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: #4CAF50;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 14px;
+    }
+    .notify-text b { color: #4CAF50; }
   </style>
   
   <script defer src="./assets/scripts/common.js?v=1.1"></script>
 </head>
 
 <body>
+
+<div id="notifyToast" class="notify-toast">
+  <div class="notify-icon">💰</div>
+  <div class="notify-text" id="notifyText">User...</div>
+</div>
 
 <div id="firstScreen" class="screen active">
   <div class="v2-wrap">
@@ -186,7 +172,7 @@
     <div class="v2">
       <div class="final-top"><div id="finalTopTitle" class="final-top__title"></div><p id="finalTopSub" class="final-top__sub"></p></div>
 
-      <<div class="chest-container" id="finalChest" data-target="chest_lost">
+      <div class="chest-container" id="finalChest" data-target="chest_lost">
         <img id="finalChestImg" class="chest-img" src="assets/images/chest-v2.webp" alt="Chest" width="360" height="360" decoding="async">
         <div class="hand-pointer hand-left" id="finalHandL">👉</div>
         <div class="hand-pointer hand-right" id="finalHandR">👈</div>
@@ -228,7 +214,9 @@
     finalTopTitle: document.getElementById("finalTopTitle"), finalTopSub: document.getElementById("finalTopSub"),
     finalHandL: document.getElementById("finalHandL"), finalHandR: document.getElementById("finalHandR"),
     finalHudHint: document.getElementById("finalHudHint"), finalHudText: document.getElementById("finalHudText"),
-    finalHudIcon: document.getElementById("finalHudIcon"), finalBonusPill: document.getElementById("finalBonusPill")
+    finalHudIcon: document.getElementById("finalHudIcon"), finalBonusPill: document.getElementById("finalBonusPill"),
+    // Notifier
+    notifyToast: document.getElementById("notifyToast"), notifyText: document.getElementById("notifyText")
   };
 
   function setTextWithBr(el, s) { el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>"); }
@@ -268,9 +256,7 @@
     // HUD UPDATE
     els.finalHudIcon.textContent = "⚠️"; 
     els.finalHudText.textContent = lang.lostHint || FALLBACK_RU.lostHint;
-    els.finalHudHint.style.borderColor = "#ff4444"; // Красная рамка
-    // Хвостик тоже делаем красным через JS (хак, т.к. псевдоэлементы сложно менять через style)
-    // Но для простоты оставим золотым или можно добавить класс .red-alert
+    els.finalHudHint.style.borderColor = "#ff4444"; 
     
     els.finalBonusPill.style.display = "inline-block";
     els.first.classList.remove("active"); els.final.classList.add("active");
@@ -287,7 +273,7 @@
     // HUD UPDATE
     els.finalHudIcon.textContent = "🎁"; 
     els.finalHudText.textContent = lang.winHint || FALLBACK_RU.winHint;
-    els.finalHudHint.style.borderColor = "#ffca28"; // Золотая рамка
+    els.finalHudHint.style.borderColor = "#ffca28"; 
     
     els.finalBonusPill.style.display = "none"; 
     els.first.classList.remove("active"); els.final.classList.add("active");
@@ -303,10 +289,37 @@
     }, 1000);
   }
 
+  // --- SOCIAL PROOF NOTIFICATIONS ---
+  function startNotifications() {
+    const names = ["Alex", "Maria", "John", "Max", "Anna", "Dmitry", "Sarah", "Nick"];
+    const actions = ["won <b>$500</b>", "got <b>100 FS</b>", "withdrew <b>$1200</b>", "won <b>$50</b>", "won <b>$2500</b>"];
+    
+    // Первая всплывашка через 2 секунды
+    setTimeout(show, 2000);
+
+    function show() {
+      const name = names[Math.floor(Math.random() * names.length)];
+      const act = actions[Math.floor(Math.random() * actions.length)];
+      els.notifyText.innerHTML = `${name} just ${act}`;
+      
+      els.notifyToast.classList.add("show");
+      
+      // Скрыть через 3 сек
+      setTimeout(() => {
+        els.notifyToast.classList.remove("show");
+        // Следующая через рандомное время (3-6 сек)
+        setTimeout(show, 3000 + Math.random() * 3000);
+      }, 3000);
+    }
+  }
+
   (async function boot() {
     const detected = detectLang();
     const { lang, data } = await loadLocale(detected);
     applyLang(lang, data);
+    
+    startNotifications(); // Запускаем пуши
+
     if (isClone) { showWinClone(data); return; }
     startTimer(data);
   })();
@@ -314,4 +327,3 @@
 </script>
 </body>
 </html>
-
