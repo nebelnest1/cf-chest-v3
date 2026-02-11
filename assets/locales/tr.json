@@ -1,12 +1,13 @@
 {
-  "h1": "Gizli Bonus İçeride",
+  "h1": "İçeride Gizli Bonus Var",
   "sub": "Açılmazsa sandık kaybolacak",
-  "hint": "Çok geç olmadan tıkla!",
+  "hint": "Geç olmadan tıkla!",
   "winTitle": "🎁 Sandık Açıldı",
   "winSub": "Son bir adım kaldı",
+  "winHint": "Ödülünü al!",
   "lostTitle": "⚠️ SON ŞANS",
-  "lostSub": "Sandığı hala açabilirsin",
-  "lostHint": "ŞİMDİ sandığa tıkla",
+  "lostSub": "Sandık hala açılabilir",
+  "lostHint": "Şimdi sandığa tıkla",
   "btn": "Sandığı Aç",
   "left": "Aktif bonuslar:",
   "notifVerb": "sandığı açtı"
