@@ -24,7 +24,7 @@
   </script>
 
   <style>
-    /* --- БАЗА --- */
+   /* --- БАЗА --- */
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       background: radial-gradient(circle at center, #2e1a54 0%, #050505 100%);
@@ -39,47 +39,74 @@
     }
     .screen { display: none; min-height: 100svh; width: 100%; }
     .screen.active { display: block; }
+    
+    /* Добавил gap, чтобы элементы не слипались в флексе */
     .v2-wrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; padding: 15px; }
-    .v2 { width: min(450px, 100%); position: relative; }
+    .v2 { width: min(450px, 100%); position: relative; display: flex; flex-direction: column; gap: 5px; }
 
     /* --- ТЕКСТЫ --- */
     h1 { font-size: clamp(30px, 9.8vw, 46px); font-weight: 900; margin: 0; text-transform: uppercase; line-height: .98; background: linear-gradient(180deg, #FFF192 0%, #FFCA28 50%, #D09600 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8)); }
-    .sub-h1 { font-size: 18px; margin: 10px 0 14px; color: #d1c4e9; font-weight: 600; padding: 0 10px; }
+    .sub-h1 { font-size: 18px; margin: 5px 0 10px; color: #d1c4e9; font-weight: 600; padding: 0 10px; }
 
     /* --- ТАЙМЕР --- */
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
-    .timer-box { font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 10px; background: rgba(0,0,0,0.4); display: inline-block; padding: 6px 30px; border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); animation: shake 2s infinite; }
+    .timer-box { font-size: 34px; font-weight: 900; color: #ff4444; margin: 0 auto 5px; background: rgba(0,0,0,0.4); display: inline-block; padding: 6px 30px; border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); animation: shake 2s infinite; }
 
-    /* --- СУНДУК --- */
-    .chest-container { position: relative; width: 85%; margin: 0 auto 10px; cursor: pointer; }
+    /* --- СУНДУК (БОЛЬШЕ ОТСТУПОВ!) --- */
+    .chest-container { 
+      position: relative; 
+      width: 85%; 
+      /* margin: Сверху Сбоку Снизу Сбоку */
+      margin: 20px auto 30px; 
+      cursor: pointer; 
+      z-index: 5; /* Чтобы был выше рук и фона */
+    }
+    
     .chest-img { width: 100%; height: auto; animation: float 3s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55)); will-change: transform; }
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-12px)} }
     .lost-nudge .chest-img { animation: chestPulse 1.2s ease-in-out infinite; }
     .win-nudge  .chest-img { animation: chestPulse 1.5s ease-in-out infinite; }
     @keyframes chestPulse{ 0%{ transform: scale(1);} 50%{ transform: scale(1.05);} 100%{ transform: scale(1);} }
 
-    /* --- РУКИ --- */
-    .hand-pointer { position: absolute; top: 50%; font-size: 60px; line-height: 1; z-index: 10; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85)); user-select: none; }
-    .hand-left { left: -40px; transform: translateY(-50%) rotate(90deg); animation: pokeRight 0.6s ease-in-out infinite alternate; }
-    .hand-right { right: -40px; transform: translateY(-50%) rotate(-90deg) scaleX(-1); animation: pokeLeft 0.6s ease-in-out infinite alternate; }
-    @keyframes pokeRight{ from{ transform: translateY(-50%) rotate(90deg) translateX(0);} to{ transform: translateY(-50%) rotate(90deg) translateX(15px);} }
-    @keyframes pokeLeft{ from{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0);} to{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-15px);} }
+    /* --- РУКИ (ИСПРАВЛЕНЫ) --- */
+    .hand-pointer { position: absolute; top: 55%; font-size: 60px; line-height: 1; z-index: 10; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85)); user-select: none; }
+    
+    /* Левая рука: Слева, без поворота, двигается вправо */
+    .hand-left { 
+      left: -45px; 
+      transform: translateY(-50%); /* Только центровка по вертикали */
+      animation: pokeRight 0.8s ease-in-out infinite alternate; 
+    }
+    
+    /* Правая рука: Справа, без поворота, двигается влево */
+    .hand-right { 
+      right: -45px; 
+      transform: translateY(-50%); 
+      animation: pokeLeft 0.8s ease-in-out infinite alternate; 
+    }
 
-    /* --- НОВЫЙ HUD (ДИАЛОГОВЫЙ БАББЛ) --- */
+    /* Анимация тыканья в бок */
+    @keyframes pokeRight{ from{ transform: translateY(-50%) translateX(0);} to{ transform: translateY(-50%) translateX(15px);} }
+    @keyframes pokeLeft{ from{ transform: translateY(-50%) translateX(0);} to{ transform: translateY(-50%) translateX(-15px);} }
+
+    /* --- БАББЛ (ОТСТУП СВЕРХУ) --- */
     .hud-hint-container {
-      margin: 15px auto 10px; /* Чуть больше отступ сверху для хвостика */
+      /* margin-top: отрицательный, если надо наехать, или положительный для отступа */
+      margin: 10px auto 5px; 
       display: flex;
       justify-content: center;
+      position: relative;
+      z-index: 20; /* Поверх всего */
     }
 
     .hud-hint {
-      position: relative; /* Для позиционирования хвостика */
-      background: rgba(0, 0, 0, 0.85); /* Темный фон */
+      position: relative;
+      background: rgba(0, 0, 0, 0.9); /* Чуть плотнее фон */
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       
-      border: 2px solid #ffca28; /* Золотая обводка */
-      border-radius: 24px; /* Округлые края */
+      border: 2px solid #ffca28;
+      border-radius: 24px;
       padding: 12px 28px;
       
       color: #ffca28;
@@ -92,47 +119,30 @@
       align-items: center;
       gap: 10px;
       
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
       pointer-events: none;
-      
-      /* Анимация плавного покачивания */
       animation: bubbleFloat 2.5s infinite ease-in-out;
     }
 
-    /* Хвостик (треугольник) указывающий вверх */
     .hud-hint::after {
       content: '';
       position: absolute;
-      top: -12px; /* Торчит сверху */
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 12px;
-      border-style: solid;
-      border-color: transparent transparent #ffca28 transparent; /* Золотой треугольник */
+      top: -12px; left: 50%; transform: translateX(-50%);
+      border-width: 12px; border-style: solid; border-color: transparent transparent #ffca28 transparent; 
     }
 
-    /* Внутренний треугольник (чтобы хвостик был не сплошным, а с рамкой) */
     .hud-hint::before {
       content: '';
       position: absolute;
-      top: -9px; /* Чуть ниже внешнего */
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-      border-width: 12px;
-      border-style: solid;
-      border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent; /* Цвет фона */
+      top: -9px; left: 50%; transform: translateX(-50%); z-index: 1;
+      border-width: 12px; border-style: solid; border-color: transparent transparent rgba(0, 0, 0, 0.9) transparent; 
     }
 
-    @keyframes bubbleFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-
+    @keyframes bubbleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
     .hud-icon { font-size: 24px; }
 
-    /* --- ПИЛЮЛЯ БОНУСОВ --- */
-    .bonus-pill { font-size: 15px; font-weight: 700; color: #ccc; background: rgba(255, 255, 255, 0.08); display: inline-block; padding: 6px 16px; border-radius: 50px; margin-top: 5px; }
+    /* --- ПИЛЮЛЯ --- */
+    .bonus-pill { font-size: 15px; font-weight: 700; color: #ccc; background: rgba(255, 255, 255, 0.08); display: inline-block; padding: 6px 16px; border-radius: 50px; margin: 5px auto 0; }
     .bonus-val { color: #ffca28; text-decoration: underline; margin-left: 4px; }
 
     /* --- ФИНАЛ --- */
@@ -155,8 +165,8 @@
 
       <div class="chest-container" id="chestSection" data-target="chest_play">
         <img id="chestImg" class="chest-img" src="assets/images/chest-v2.webp" data-closed="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest" width="360" height="360" fetchpriority="high" decoding="async">
-        <div class="hand-pointer hand-left">👈</div>
-        <div class="hand-pointer hand-right">👉</div>
+        <div class="hand-pointer hand-left">👉</div>
+        <div class="hand-pointer hand-right">👈</div>
       </div>
 
       <div class="hud-hint-container">
@@ -176,10 +186,10 @@
     <div class="v2">
       <div class="final-top"><div id="finalTopTitle" class="final-top__title"></div><p id="finalTopSub" class="final-top__sub"></p></div>
 
-      <div class="chest-container" id="finalChest" data-target="chest_lost">
+      <<div class="chest-container" id="finalChest" data-target="chest_lost">
         <img id="finalChestImg" class="chest-img" src="assets/images/chest-v2.webp" alt="Chest" width="360" height="360" decoding="async">
-        <div class="hand-pointer hand-left" id="finalHandL">👈</div>
-        <div class="hand-pointer hand-right" id="finalHandR">👉</div>
+        <div class="hand-pointer hand-left" id="finalHandL">👉</div>
+        <div class="hand-pointer hand-right" id="finalHandR">👈</div>
       </div>
 
       <div class="hud-hint-container">
@@ -304,3 +314,4 @@
 </script>
 </body>
 </html>
+
