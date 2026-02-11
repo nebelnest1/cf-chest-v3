@@ -1,13 +1,13 @@
 {
-  "h1": "NHANH LÊN!<br>ƯU ĐÃI SẮP HẾT",
-  "sub": "Đừng để bonus của bạn biến mất!",
-  "hint": "⚡ CHẠM VÀO RƯƠNG ĐỂ MỞ KHÓA ⚡",
-  "winTitle": "💰 ĐÃ MỞ QUYỀN!",
-  "winSub": "Bonus đã sẵn sàng bên dưới",
-  "lostTitle": "⚠️ HẾT GIỜ!",
-  "lostSub": "Cơ hội cuối để nhận bonus",
-  "lostHint": "NHẤN NÚT NGAY!",
-  "btn": "NHẬN BONUS",
-  "left": "Bonus còn lại:",
-  "notifVerb": "đã nhận"
+  "h1": "Phần Thưởng Bí Mật",
+  "sub": "Rương sẽ biến mất nếu không mở",
+  "hint": "Nhấn ngay kẻo lỡ!",
+  "winTitle": "🎁 Rương Đã Mở",
+  "winSub": "Chỉ còn một bước nữa",
+  "lostTitle": "⚠️ CƠ HỘI CUỐI CÙNG",
+  "lostSub": "Vẫn có thể mở rương",
+  "lostHint": "Nhấn vào rương NGAY",
+  "btn": "Mở Rương",
+  "left": "Tiền thưởng:",
+  "notifVerb": "đã mở rương"
 }
