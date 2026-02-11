@@ -1,13 +1,14 @@
 {
-  "h1": "Bonus Secret Inclus",
-  "sub": "Le coffre disparaîtra s'il n'est pas ouvert",
-  "hint": "Appuyez avant qu'il ne soit trop tard !",
-  "winTitle": "🎁 Coffre Ouvert",
-  "winSub": "Il ne reste qu'une étape",
+  "h1": "Bonus secret à l'intérieur",
+  "sub": "Le coffre va disparaître",
+  "hint": "Tape avant qu'il soit trop tard !",
+  "winTitle": "🎁 Coffre ouvert",
+  "winSub": "Plus qu'une étape",
+  "winHint": "Récupère ton prix !",
   "lostTitle": "⚠️ DERNIÈRE CHANCE",
-  "lostSub": "Vous pouvez encore ouvrir le coffre",
-  "lostHint": "Appuyez sur le coffre MAINTENANT",
-  "btn": "Ouvrir",
+  "lostSub": "Le coffre peut encore être ouvert",
+  "lostHint": "Tape sur le coffre maintenant",
+  "btn": "Ouvrir le coffre",
   "left": "Bonus actifs :",
   "notifVerb": "a ouvert le coffre"
 }
