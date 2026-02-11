@@ -1,13 +1,14 @@
 {
-  "h1": "Bônus Secreto Dentro",
-  "sub": "O baú desaparecerá se não abrir",
-  "hint": "Toque antes que acabe!",
-  "winTitle": "🎁 Baú Aberto",
+  "h1": "Bónus secreto no interior",
+  "sub": "O baú desaparecerá se não for aberto",
+  "hint": "Toca antes que seja tarde!",
+  "winTitle": "🎁 Baú aberto",
   "winSub": "Falta apenas um passo",
+  "winHint": "Resgata o teu prémio!",
   "lostTitle": "⚠️ ÚLTIMA CHANCE",
-  "lostSub": "Você ainda pode abrir o baú",
-  "lostHint": "Toque no baú AGORA",
-  "btn": "Abrir Baú",
-  "left": "Bônus ativos:",
+  "lostSub": "Ainda podes abrir o baú",
+  "lostHint": "Toca no baú agora",
+  "btn": "Abrir baú",
+  "left": "Bónus ativos:",
   "notifVerb": "abriu o baú"
 }
