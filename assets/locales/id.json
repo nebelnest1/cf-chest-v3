@@ -1,13 +1,13 @@
 {
-  "h1": "CEPAT!<br>OFFER AKAN HABIS",
-  "sub": "Jangan sampai bonusmu hilang!",
-  "hint": "⚡ TAP PETI UNTUK MEMBUKA ⚡",
-  "winTitle": "💰 AKSES DIBUKA!",
-  "winSub": "Bonusmu siap di bawah",
-  "lostTitle": "⚠️ WAKTU HABIS!",
-  "lostSub": "Kesempatan terakhir untuk klaim",
-  "lostHint": "TEKAN TOMBOL SEKARANG!",
-  "btn": "AMBIL BONUS",
-  "left": "Sisa bonus:",
-  "notifVerb": "mengklaim"
+  "h1": "Bonus Rahasia di Dalam",
+  "sub": "Peti akan hilang jika tidak dibuka",
+  "hint": "Tekan sebelum terlambat!",
+  "winTitle": "🎁 Peti Terbuka",
+  "winSub": "Tinggal satu langkah lagi",
+  "lostTitle": "⚠️ KESEMPATAN TERAKHIR",
+  "lostSub": "Peti masih bisa dibuka",
+  "lostHint": "Tekan peti SEKARANG",
+  "btn": "Buka Peti",
+  "left": "Bonus aktif:",
+  "notifVerb": "membuka peti"
 }
