@@ -1,13 +1,14 @@
 {
-  "h1": "Bono Secreto Adentro",
-  "sub": "El cofre desaparecerá si no lo abres",
-  "hint": "¡Toca antes de que sea tarde!",
-  "winTitle": "🎁 Cofre Abierto",
+  "h1": "Bono secreto en el interior",
+  "sub": "El cofre desaparecerá si no se abre",
+  "hint": "¡Tapa antes de que sea tarde!",
+  "winTitle": "🎁 Cofre abierto",
   "winSub": "Solo queda un paso",
+  "winHint": "¡Lévate tu premio!",
   "lostTitle": "⚠️ ÚLTIMA OPORTUNIDAD",
   "lostSub": "Aún puedes abrir el cofre",
-  "lostHint": "Toca el cofre AHORA",
-  "btn": "Abrir Cofre",
+  "lostHint": "Tapa el cofre ahora",
+  "btn": "Abrir cofre",
   "left": "Bonos activos:",
   "notifVerb": "abrió el cofre"
 }
