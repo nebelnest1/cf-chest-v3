@@ -9,17 +9,14 @@
     var APP_CONFIG = {
       "domain": "https://jup9.com",
       
-      // === 1. ФИНАЛЬНЫЙ КЛИК (В КЛОНЕ) ===
-      "mainExit_newTab_zoneId": 10537802,       // Оффер (новая вкладка)
-      "mainExit_currentTab_zoneId": 10536647,   // Домонетизация (текущая вкладка)
+      "mainExit_newTab_zoneId": 10537802,       
+      "mainExit_currentTab_zoneId": 10536647,   
 
-      // === 2. ПЕРВЫЙ КЛИК (В ОРИГИНАЛЕ) ===
-      "tabUnderClick_zoneId": 10576300,         // Домонетизация при открытии клона
+      "tabUnderClick_zoneId": 10576300,         
 
-      // === 3. НАСТРОЙКИ (ВКЛЮЧАЯ REVERSE) ===
-      "reverse_zoneId": 10537801,               // Перехват кнопки "Назад"
+      "reverse_zoneId": 10537801,               
       
-      "back_zoneId": 10536649,                  // Скриптовый возврат (если нужен)
+      "back_zoneId": 10536649,
       "back_count": 10,
       "autoexit_zoneId": 10536648,
       "autoexit_timeToRedirect": 90
@@ -40,94 +37,50 @@
       display: flex;
       flex-direction: column;
     }
-
     .screen { display: none; min-height: 100svh; width: 100%; }
     .screen.active { display: block; }
-
     .v2-wrap { min-height: 100svh; display: flex; align-items: center; justify-content: center; padding: 15px; }
     .v2 { width: min(450px, 100%); position: relative; }
 
     /* --- ТЕКСТЫ --- */
-    h1 {
-      font-size: clamp(30px, 9.8vw, 46px);
-      font-weight: 900;
-      margin: 0;
-      text-transform: uppercase;
-      line-height: .98;
-      background: linear-gradient(180deg, #FFF192 0%, #FFCA28 50%, #D09600 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8));
-    }
+    h1 { font-size: clamp(30px, 9.8vw, 46px); font-weight: 900; margin: 0; text-transform: uppercase; line-height: .98; background: linear-gradient(180deg, #FFF192 0%, #FFCA28 50%, #D09600 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.8)); }
     .sub-h1 { font-size: 18px; margin: 10px 0 14px; color: #d1c4e9; font-weight: 600; padding: 0 10px; }
 
     /* --- ТАЙМЕР --- */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-2px) rotate(-1deg); }
-      75% { transform: translateX(2px) rotate(1deg); }
-    }
-    .timer-box {
-      font-size: 34px;
-      font-weight: 900;
-      color: #ff4444;
-      margin-bottom: 10px;
-      background: rgba(0,0,0,0.4);
-      display: inline-block;
-      padding: 6px 30px;
-      border-radius: 12px;
-      border: 2px solid #ff4444;
-      box-shadow: 0 0 20px rgba(255,68,68,0.2);
-      animation: shake 2s infinite; /* Чуть спокойнее тряска */
-    }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
+    .timer-box { font-size: 34px; font-weight: 900; color: #ff4444; margin-bottom: 10px; background: rgba(0,0,0,0.4); display: inline-block; padding: 6px 30px; border-radius: 12px; border: 2px solid #ff4444; box-shadow: 0 0 20px rgba(255,68,68,0.2); animation: shake 2s infinite; }
 
     /* --- СУНДУК --- */
     .chest-container { position: relative; width: 85%; margin: 0 auto 10px; cursor: pointer; }
-    .chest-img {
-      width: 100%;
-      height: auto;
-      animation: float 3s infinite ease-in-out;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55));
-      will-change: transform;
-    }
+    .chest-img { width: 100%; height: auto; animation: float 3s infinite ease-in-out; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55)); will-change: transform; }
     @keyframes float { 0%,100% {transform:translateY(0)} 50% {transform:translateY(-12px)} }
-
-    /* Пульсация сундука для LOST/WIN */
     .lost-nudge .chest-img { animation: chestPulse 1.2s ease-in-out infinite; }
     .win-nudge  .chest-img { animation: chestPulse 1.5s ease-in-out infinite; }
     @keyframes chestPulse{ 0%{ transform: scale(1);} 50%{ transform: scale(1.05);} 100%{ transform: scale(1);} }
 
     /* --- РУКИ --- */
-    .hand-pointer {
-      position: absolute;
-      top: 50%;
-      font-size: 60px;
-      line-height: 1;
-      z-index: 10;
-      pointer-events: none;
-      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85));
-      user-select: none;
-    }
+    .hand-pointer { position: absolute; top: 50%; font-size: 60px; line-height: 1; z-index: 10; pointer-events: none; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.85)); user-select: none; }
     .hand-left { left: -40px; transform: translateY(-50%) rotate(90deg); animation: pokeRight 0.6s ease-in-out infinite alternate; }
     .hand-right { right: -40px; transform: translateY(-50%) rotate(-90deg) scaleX(-1); animation: pokeLeft 0.6s ease-in-out infinite alternate; }
-    
     @keyframes pokeRight{ from{ transform: translateY(-50%) rotate(90deg) translateX(0);} to{ transform: translateY(-50%) rotate(90deg) translateX(15px);} }
     @keyframes pokeLeft{ from{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(0);} to{ transform: translateY(-50%) rotate(-90deg) scaleX(-1) translateX(-15px);} }
 
-    /* --- НОВЫЙ HUD (ПОДСКАЗКА) --- */
-    /* Это НЕ кнопка, это игровая подсказка */
+    /* --- НОВЫЙ HUD (ДИАЛОГОВЫЙ БАББЛ) --- */
     .hud-hint-container {
-      margin: 10px auto 10px;
+      margin: 15px auto 10px; /* Чуть больше отступ сверху для хвостика */
       display: flex;
       justify-content: center;
     }
+
     .hud-hint {
-      background: rgba(0, 0, 0, 0.65);
+      position: relative; /* Для позиционирования хвостика */
+      background: rgba(0, 0, 0, 0.85); /* Темный фон */
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 202, 40, 0.25);
-      border-radius: 16px;
-      padding: 10px 24px;
+      
+      border: 2px solid #ffca28; /* Золотая обводка */
+      border-radius: 24px; /* Округлые края */
+      padding: 12px 28px;
       
       color: #ffca28;
       font-size: 18px;
@@ -139,46 +92,56 @@
       align-items: center;
       gap: 10px;
       
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      pointer-events: none; /* Чтобы не кликали сюда, а кликали на сундук */
-      animation: hudPulse 2s infinite ease-in-out;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      pointer-events: none;
+      
+      /* Анимация плавного покачивания */
+      animation: bubbleFloat 2.5s infinite ease-in-out;
     }
-    .hud-icon { font-size: 22px; }
 
-    @keyframes hudPulse {
-      0%, 100% { transform: scale(1); border-color: rgba(255, 202, 40, 0.25); }
-      50% { transform: scale(1.02); border-color: rgba(255, 202, 40, 0.6); box-shadow: 0 0 15px rgba(255, 202, 40, 0.2); }
+    /* Хвостик (треугольник) указывающий вверх */
+    .hud-hint::after {
+      content: '';
+      position: absolute;
+      top: -12px; /* Торчит сверху */
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 12px;
+      border-style: solid;
+      border-color: transparent transparent #ffca28 transparent; /* Золотой треугольник */
     }
+
+    /* Внутренний треугольник (чтобы хвостик был не сплошным, а с рамкой) */
+    .hud-hint::before {
+      content: '';
+      position: absolute;
+      top: -9px; /* Чуть ниже внешнего */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      border-width: 12px;
+      border-style: solid;
+      border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent; /* Цвет фона */
+    }
+
+    @keyframes bubbleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .hud-icon { font-size: 24px; }
 
     /* --- ПИЛЮЛЯ БОНУСОВ --- */
-    .bonus-pill {
-      font-size: 15px;
-      font-weight: 700;
-      color: #ccc;
-      background: rgba(255, 255, 255, 0.08);
-      display: inline-block;
-      padding: 6px 16px;
-      border-radius: 50px;
-      margin-top: 5px;
-    }
+    .bonus-pill { font-size: 15px; font-weight: 700; color: #ccc; background: rgba(255, 255, 255, 0.08); display: inline-block; padding: 6px 16px; border-radius: 50px; margin-top: 5px; }
     .bonus-val { color: #ffca28; text-decoration: underline; margin-left: 4px; }
 
-    /* --- Стили для Final Screen (Lost/Win) --- */
-    .final-top {
-      margin: 0 auto 10px;
-      padding: 15px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 202, 40, 0.4);
-      backdrop-filter: blur(10px);
-      max-width: 400px;
-    }
+    /* --- ФИНАЛ --- */
+    .final-top { margin: 0 auto 10px; padding: 15px; border-radius: 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 202, 40, 0.4); backdrop-filter: blur(10px); max-width: 400px; }
     .final-top__title { font-size: 26px; font-weight: 900; color: #ffca28; text-transform: uppercase; }
     .final-top__sub { margin: 6px 0 0; font-size: 16px; color: #fff; line-height: 1.2; }
-
   </style>
   
-  <script defer src="./assets/scripts/common.js?м=44"></script>
+  <script defer src="./assets/scripts/common.js?v=1.1"></script>
 </head>
 
 <body>
@@ -188,17 +151,10 @@
     <div class="v2">
       <h1 id="txt-h1"></h1>
       <div class="sub-h1" id="txt-sub"></div>
-
       <div class="timer-box"><span id="timer">00:15</span></div>
 
       <div class="chest-container" id="chestSection" data-target="chest_play">
-        <img id="chestImg" class="chest-img"
-             src="assets/images/chest-v2.webp"
-             data-closed="assets/images/chest-v2.webp"
-             data-open="assets/images/treasure-chest-open.webp"
-             alt="Chest" width="360" height="360"
-             fetchpriority="high" decoding="async">
-        
+        <img id="chestImg" class="chest-img" src="assets/images/chest-v2.webp" data-closed="assets/images/chest-v2.webp" data-open="assets/images/treasure-chest-open.webp" alt="Chest" width="360" height="360" fetchpriority="high" decoding="async">
         <div class="hand-pointer hand-left">👈</div>
         <div class="hand-pointer hand-right">👉</div>
       </div>
@@ -210,11 +166,7 @@
         </div>
       </div>
 
-      <div class="bonus-pill">
-        <span id="txt-left">Активные бонусы:</span>
-        <span class="bonus-val">12</span>
-      </div>
-
+      <div class="bonus-pill"><span id="txt-left">Активные бонусы:</span><span class="bonus-val">12</span></div>
     </div>
   </div>
 </div>
@@ -222,18 +174,10 @@
 <div id="finalScreen" class="screen">
   <div class="v2-wrap">
     <div class="v2">
-      
-      <div class="final-top">
-        <div id="finalTopTitle" class="final-top__title"></div>
-        <p id="finalTopSub" class="final-top__sub"></p>
-      </div>
+      <div class="final-top"><div id="finalTopTitle" class="final-top__title"></div><p id="finalTopSub" class="final-top__sub"></p></div>
 
       <div class="chest-container" id="finalChest" data-target="chest_lost">
-        <img id="finalChestImg" class="chest-img"
-             src="assets/images/chest-v2.webp"
-             alt="Chest" width="360" height="360"
-             decoding="async">
-
+        <img id="finalChestImg" class="chest-img" src="assets/images/chest-v2.webp" alt="Chest" width="360" height="360" decoding="async">
         <div class="hand-pointer hand-left" id="finalHandL">👈</div>
         <div class="hand-pointer hand-right" id="finalHandR">👉</div>
       </div>
@@ -245,11 +189,7 @@
         </div>
       </div>
 
-      <div class="bonus-pill" id="finalBonusPill">
-        <span id="txt-left-2">Активные бонусы:</span>
-        <span class="bonus-val">12</span>
-      </div>
-
+      <div class="bonus-pill" id="finalBonusPill"><span id="txt-left-2">Активные бонусы:</span><span class="bonus-val">12</span></div>
     </div>
   </div>
 </div>
@@ -257,179 +197,99 @@
 <script>
 (function () {
   const RTL_LANGS = new Set(["ar","fa","he","ur"]);
-  // Список поддерживаемых языков (если есть json)
   const SUPPORTED = new Set(["ar","bg","bn","de","en","es","fa","fi","fil","fr","he","hi","hu","id","it","ja","kk","ko","ms","nl","no","pl","pt","ro","ru","sv","sy","th","tl","tr","uk","ur","uz","vi","zh"]);
 
-  // ТЕКСТЫ ПО УМОЛЧАНИЮ (RU)
   const FALLBACK_RU = {
-    "h1": "Секретный бонус внутри",
-    "sub": "Сундук исчезнет, если не открыть",
-    
-    // Play Screen
-    "hint": "Тапай, пока не поздно!",
-    "left": "Активные бонусы:",
-
-    // Lost Screen
-    "lostTitle": "⚠️ ПОСЛЕДНИЙ ШАНС",
-    "lostSub": "Сундук ещё можно открыть",
-    "lostHint": "Тапай по сундуку сейчас", // Текст в HUD
-
-    // Win Screen
-    "winTitle": "🎁 СУНДУК ОТКРЫТ",
-    "winSub": "Остался один шаг",
-    "winHint": "Забирай свой приз!" // Текст в HUD
+    "h1": "Секретный бонус внутри", "sub": "Сундук исчезнет, если не открыть",
+    "hint": "Тапай, пока не поздно!", "left": "Активные бонусы:",
+    "lostTitle": "⚠️ ПОСЛЕДНИЙ ШАНС", "lostSub": "Сундук ещё можно открыть", "lostHint": "Тапай по сундуку сейчас",
+    "winTitle": "🎁 СУНДУК ОТКРЫТ", "winSub": "Остался один шаг", "winHint": "Забирай свой приз!"
   };
 
   const cur = new URL(location.href);
   const isClone = cur.searchParams.get("__cl") === "1";
 
   const els = {
-    first: document.getElementById("firstScreen"),
-    final: document.getElementById("finalScreen"),
-    timer: document.getElementById("timer"),
-    h1: document.getElementById("txt-h1"),
-    sub: document.getElementById("txt-sub"),
-    hintPlay: document.getElementById("hintPlayText"),
-    left: document.getElementById("txt-left"),
-    left2: document.getElementById("txt-left-2"),
-    
+    first: document.getElementById("firstScreen"), final: document.getElementById("finalScreen"),
+    timer: document.getElementById("timer"), h1: document.getElementById("txt-h1"), sub: document.getElementById("txt-sub"),
+    hintPlay: document.getElementById("hintPlayText"), left: document.getElementById("txt-left"), left2: document.getElementById("txt-left-2"),
     chestImg: document.getElementById("chestImg"),
-    
-    finalChest: document.getElementById("finalChest"),
-    finalChestImg: document.getElementById("finalChestImg"),
-    finalTopTitle: document.getElementById("finalTopTitle"),
-    finalTopSub: document.getElementById("finalTopSub"),
-    
-    finalHandL: document.getElementById("finalHandL"),
-    finalHandR: document.getElementById("finalHandR"),
-    
-    // HUD элементы финала
-    finalHudHint: document.getElementById("finalHudHint"),
-    finalHudText: document.getElementById("finalHudText"),
-    finalHudIcon: document.getElementById("finalHudIcon"),
-    finalBonusPill: document.getElementById("finalBonusPill")
+    finalChest: document.getElementById("finalChest"), finalChestImg: document.getElementById("finalChestImg"),
+    finalTopTitle: document.getElementById("finalTopTitle"), finalTopSub: document.getElementById("finalTopSub"),
+    finalHandL: document.getElementById("finalHandL"), finalHandR: document.getElementById("finalHandR"),
+    finalHudHint: document.getElementById("finalHudHint"), finalHudText: document.getElementById("finalHudText"),
+    finalHudIcon: document.getElementById("finalHudIcon"), finalBonusPill: document.getElementById("finalBonusPill")
   };
 
-  function setTextWithBr(el, s) {
-    el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>");
-  }
-
+  function setTextWithBr(el, s) { el.innerHTML = (s || "").replace(/<br\s*\/?>|\n/gi, "<br>"); }
   function detectLang() {
     const p = new URLSearchParams(location.search);
     const q = (p.get("lang") || "").trim().toLowerCase();
     if (q) return q;
     return ((navigator.language || "ru").split("-")[0]).toLowerCase();
   }
-
   async function loadLocale(lang) {
     const safe = SUPPORTED.has(lang) ? lang : "ru";
     try {
       const res = await fetch(`./assets/locales/${safe}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error("locale fetch failed");
       return { lang: safe, data: await res.json() };
-    } catch (e) {
-      return { lang: "ru", data: FALLBACK_RU };
-    }
+    } catch (e) { return { lang: "ru", data: FALLBACK_RU }; }
   }
-
   function applyLang(langCode, lang) {
     document.documentElement.lang = langCode;
     document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
-
-    // Play Screen Texts
     setTextWithBr(els.h1, lang.h1 || FALLBACK_RU.h1);
     els.sub.textContent  = lang.sub  || FALLBACK_RU.sub;
     els.hintPlay.textContent = lang.hint || FALLBACK_RU.hint;
-    
     const leftTxt = lang.left || FALLBACK_RU.left;
     els.left.textContent = leftTxt;
     els.left2.textContent = leftTxt;
   }
 
-  // --- СОСТОЯНИЕ 2: LOST (Оригинал, время вышло) ---
   function showLost(lang) {
-    document.body.classList.remove("win-nudge");
-    document.body.classList.add("lost-nudge");
-
-    // Логика: Еще оригинал -> Micro Handoff
+    document.body.classList.remove("win-nudge"); document.body.classList.add("lost-nudge");
     els.finalChest.setAttribute("data-target", "chest_lost");
-
-    // Тексты
     els.finalTopTitle.textContent = lang.lostTitle || FALLBACK_RU.lostTitle;
     els.finalTopSub.textContent   = lang.lostSub   || FALLBACK_RU.lostSub;
-
-    // Картинка: Закрытый
-    const closedSrc = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
-    els.finalChestImg.src = closedSrc;
-
-    // Руки: Видны
-    els.finalHandL.style.display = "block";
-    els.finalHandR.style.display = "block";
-
-    // HUD: Стиль Lost
-    els.finalHudIcon.textContent = "⚠️";
+    els.finalChestImg.src = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
+    els.finalHandL.style.display = "block"; els.finalHandR.style.display = "block";
+    
+    // HUD UPDATE
+    els.finalHudIcon.textContent = "⚠️"; 
     els.finalHudText.textContent = lang.lostHint || FALLBACK_RU.lostHint;
-    els.finalHudHint.style.borderColor = "rgba(255, 68, 68, 0.4)"; // Красная тревога
-    els.finalHudText.style.color = "#fff";
-
-    // Пилюля бонусов: ВИДНА (как ты просил)
+    els.finalHudHint.style.borderColor = "#ff4444"; // Красная рамка
+    // Хвостик тоже делаем красным через JS (хак, т.к. псевдоэлементы сложно менять через style)
+    // Но для простоты оставим золотым или можно добавить класс .red-alert
+    
     els.finalBonusPill.style.display = "inline-block";
-
-    els.first.classList.remove("active");
-    els.final.classList.add("active");
+    els.first.classList.remove("active"); els.final.classList.add("active");
   }
 
-  // --- СОСТОЯНИЕ 3: WIN (Клон, открыт) ---
   function showWinClone(lang) {
-    document.body.classList.remove("lost-nudge");
-    document.body.classList.add("win-nudge");
-
-    // Логика: Клон -> Main Exit (Offer)
+    document.body.classList.remove("lost-nudge"); document.body.classList.add("win-nudge");
     els.finalChest.setAttribute("data-target", "chest_win");
-
-    // Тексты
     els.finalTopTitle.textContent = lang.winTitle || FALLBACK_RU.winTitle;
     els.finalTopSub.textContent   = lang.winSub   || FALLBACK_RU.winSub;
-
-    // Картинка: Открытый
-    const openSrc = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
-    els.finalChestImg.src = openSrc;
-
-    // Руки: Скрываем (чтобы фокус был на сундуке)
-    // Либо можно оставить, но снизу. Пока скроем, как в коде было.
-    els.finalHandL.style.display = "none";
-    els.finalHandR.style.display = "none";
-
-    // HUD: Стиль Win
-    els.finalHudIcon.textContent = "🎁";
+    els.finalChestImg.src = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
+    els.finalHandL.style.display = "none"; els.finalHandR.style.display = "none";
+    
+    // HUD UPDATE
+    els.finalHudIcon.textContent = "🎁"; 
     els.finalHudText.textContent = lang.winHint || FALLBACK_RU.winHint;
-    els.finalHudHint.style.borderColor = "rgba(255, 202, 40, 0.5)"; // Золото
-
-    // Пилюля бонусов: В WIN можно скрыть, чтобы не отвлекать, или оставить.
-    // Оставим для единообразия, но можно сделать display="none"
+    els.finalHudHint.style.borderColor = "#ffca28"; // Золотая рамка
+    
     els.finalBonusPill.style.display = "none"; 
-
-    els.first.classList.remove("active");
-    els.final.classList.add("active");
+    els.first.classList.remove("active"); els.final.classList.add("active");
   }
 
   function startTimer(lang) {
-    let timeLeft = 15;
-    els.timer.textContent = "00:15";
-
+    let timeLeft = 15; els.timer.textContent = "00:15";
     const tInt = setInterval(() => {
-      timeLeft--;
-      els.timer.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
-
-      // Блюр сундука по мере истечения времени (эффект тревоги)
-      const p = Math.max(0, timeLeft / 15);
-      const blur = (1 - p) * 6;
+      timeLeft--; els.timer.textContent = `00:${timeLeft < 10 ? "0" + timeLeft : timeLeft}`;
+      const p = Math.max(0, timeLeft / 15); const blur = (1 - p) * 6;
       els.chestImg.style.filter = `blur(${blur}px) drop-shadow(0 10px 20px rgba(0,0,0,0.55))`;
-
-      if (timeLeft <= 0) {
-        clearInterval(tInt);
-        showLost(lang);
-      }
+      if (timeLeft <= 0) { clearInterval(tInt); showLost(lang); }
     }, 1000);
   }
 
@@ -437,16 +297,10 @@
     const detected = detectLang();
     const { lang, data } = await loadLocale(detected);
     applyLang(lang, data);
-
-    if (isClone) {
-      showWinClone(data);
-      return;
-    }
-
+    if (isClone) { showWinClone(data); return; }
     startTimer(data);
   })();
 })();
 </script>
 </body>
 </html>
-
