@@ -1,13 +1,13 @@
 {
-  "h1": "VITE !<br>L’OFFRE SE TERMINE",
-  "sub": "Ne laisse pas ton bonus disparaître !",
-  "hint": "⚡ TOUCHE LE COFFRE POUR DÉBLOQUER ⚡",
-  "winTitle": "💰 ACCÈS ACCORDÉ !",
-  "winSub": "Ton bonus est prêt ci-dessous",
-  "lostTitle": "⚠️ TEMPS ÉCOULÉ !",
-  "lostSub": "Dernière chance de récupérer ton bonus",
-  "lostHint": "CLIQUE SUR LE BOUTON MAINTENANT !",
-  "btn": "OBTENIR MON BONUS",
-  "left": "Bonus restants :",
-  "notifVerb": "a réclamé"
+  "h1": "Bonus Secret Inclus",
+  "sub": "Le coffre disparaîtra s'il n'est pas ouvert",
+  "hint": "Appuyez avant qu'il ne soit trop tard !",
+  "winTitle": "🎁 Coffre Ouvert",
+  "winSub": "Il ne reste qu'une étape",
+  "lostTitle": "⚠️ DERNIÈRE CHANCE",
+  "lostSub": "Vous pouvez encore ouvrir le coffre",
+  "lostHint": "Appuyez sur le coffre MAINTENANT",
+  "btn": "Ouvrir",
+  "left": "Bonus actifs :",
+  "notifVerb": "a ouvert le coffre"
 }
