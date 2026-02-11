@@ -1,13 +1,13 @@
 {
-  "h1": "BILIS!<br>MALAPIT NA MAGTAPOS",
-  "sub": "Huwag hayaang mawala ang bonus mo!",
-  "hint": "⚡ I-TAP ANG KABAN PARA I-UNLOCK ⚡",
-  "winTitle": "💰 NA-UNLOCK NA!",
-  "winSub": "Handa na ang bonus sa ibaba",
-  "lostTitle": "⚠️ TAPOS NA ANG ORAS!",
-  "lostSub": "Huling pagkakataon para kunin",
-  "lostHint": "I-CLICK ANG BUTTON NGAYON!",
-  "btn": "KUNIN ANG BONUS",
-  "left": "Natitirang bonus:",
-  "notifVerb": "kumuha ng"
+  "h1": "Lihim na Bonus sa Loob",
+  "sub": "Mawawala ang baul kapag hindi binuksan",
+  "hint": "I-tap bago mahuli ang lahat!",
+  "winTitle": "🎁 Bukas na ang Baul",
+  "winSub": "Isang hakbang na lang",
+  "lostTitle": "⚠️ HULING PAGKAKATAON",
+  "lostSub": "Pwede pang buksan ang baul",
+  "lostHint": "I-tap ang baul NGAYON",
+  "btn": "Buksan",
+  "left": "Aktibong bonus:",
+  "notifVerb": "binuksan ang baul"
 }
