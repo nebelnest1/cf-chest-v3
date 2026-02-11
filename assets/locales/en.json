@@ -1,17 +1,13 @@
 {
-  "h1": "CONGRATS!YOU ARE SELECTED",
-  "sub": "Your device IP is the lucky winner today!",
-  "hint": "TAP TO REVEAL PRIZE",
-  
-  "winTitle": "🎉 100 FREE SPINS!",
-  "winSub": "JACKPOT CONFIRMED! <br> Status: <b>Waiting for withdrawal...</b>",
-  
-  "lostTitle": "⚠️ LAST CHANCE!",
-  "lostSub": "Your prize is reserved for 30s.",
-  "lostHint": "Don't miss out!",
-  
-  "btn": "CLAIM JACKPOT 🎰",
-  
-  "left": "Winners online:",
-  "notifVerb": "just withdrew"
+  "h1": "Secret Bonus Inside",
+  "sub": "Chest will disappear if not opened",
+  "hint": "Tap before it's too late!",
+  "winTitle": "🎁 Chest Opened",
+  "winSub": "One step left",
+  "lostTitle": "⚠️ LAST CHANCE",
+  "lostSub": "You can still open the chest",
+  "lostHint": "Tap the chest NOW",
+  "btn": "Open Chest",
+  "left": "Active bonuses:",
+  "notifVerb": "opened the chest"
 }
