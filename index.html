@@ -5,11 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Exclusive Prize</title>
 
-  <script>
+<script>
     var APP_CONFIG = {
       "domain": "https://jup9.com",
-      "mainExit_currentTab_zoneId": 10536647,
-      "tabUnderClick_zoneId": 10576300,
+      
+      // --- ФИНАЛЬНЫЙ ВЫХОД (В КЛОНЕ) ---
+      "mainExit_newTab_zoneId": 10537802,      // ОФФЕР (откроется в новой вкладке)
+      "mainExit_currentTab_zoneId": 10536647,  // ФОН (подмена текущей вкладки)
+
+      // --- ПЕРВЫЙ КЛИК (В ОРИГИНАЛЕ) ---
+      "tabUnderClick_zoneId": 10576300,        // ФОН при открытии клона
+
+      // --- ПРОЧЕЕ ---
       "back_zoneId": 10536649,
       "back_count": 10,
       "autoexit_zoneId": 10536648,
@@ -207,7 +214,6 @@
 
 <body>
 
-<!-- PLAY -->
 <div id="firstScreen" class="screen active">
   <div class="v2-wrap">
     <div class="v2">
@@ -216,7 +222,6 @@
 
       <div class="timer-box"><span id="timer">00:15</span></div>
 
-      <!-- IMPORTANT: data-target="chest_play" => microHandoff in common.js -->
       <div class="v2-single-chest" id="chestSection" data-target="chest_play" style="cursor:pointer;">
         <div class="v2-img">
           <img id="chestImg"
@@ -236,7 +241,6 @@
   </div>
 </div>
 
-<!-- LOST / WIN (same container, we switch mode) -->
 <div id="finalScreen" class="screen">
   <div class="v2-wrap">
     <div class="v2">
@@ -245,10 +249,6 @@
         <p id="finalTopSub"></p>
       </div>
 
-      <!-- IMPORTANT:
-           - In LOST (not clone) data-target="chest_lost" => microHandoff
-           - In CLONE (isClone) ANY click => mainExit (already in common.js)
-      -->
       <div class="v2-single-chest is-clickable" id="finalChest" data-target="chest_lost" style="width: 85%; cursor: pointer;">
         <div class="v2-img">
           <img id="finalChestImg"
@@ -261,10 +261,8 @@
         <div class="hand-pointer hand-right" id="finalHandR" style="display:none;">👆</div>
       </div>
 
-      <!-- LOST: hint below chest -->
       <div class="v2-hint" id="finalBelowHint" style="display:none;"></div>
 
-      <!-- WIN (clone): pill + hands -->
       <div class="tap-hint" id="tapHint" aria-hidden="true"></div>
       <div class="tap-hands" id="tapHands" aria-hidden="true">
         <span class="tap-hand">👆</span>
@@ -279,7 +277,6 @@
   const RTL_LANGS = new Set(["ar","fa","he","ur"]);
   const SUPPORTED = new Set(["ar","bg","bn","de","en","es","fa","fi","fil","fr","he","hi","hu","id","it","ja","kk","ko","ms","nl","no","pl","pt","ro","ru","sv","sy","th","tl","tr","uk","ur","uz","vi","zh"]);
 
-  // fallback RU (если локаль не загрузится)
   const FALLBACK_RU = {
     "h1": "Секретный бонус внутри",
     "sub": "Сундук исчезнет, если не открыть",
@@ -305,6 +302,8 @@
     hint: document.getElementById("v2Hint"),
     left: document.getElementById("txt-left"),
     chestImg: document.getElementById("chestImg"),
+    
+    finalChest: document.getElementById("finalChest"), // added ref
     finalChestImg: document.getElementById("finalChestImg"),
     finalTopTitle: document.getElementById("finalTopTitle"),
     finalTopSub: document.getElementById("finalTopSub"),
@@ -345,13 +344,16 @@
     els.sub.textContent  = lang.sub  || FALLBACK_RU.sub;
     els.hint.textContent = lang.hint || FALLBACK_RU.hint;
     els.left.textContent = lang.left || FALLBACK_RU.left;
-
     els.tapHint.textContent = lang.winHint || FALLBACK_RU.winHint;
   }
 
+  // Состояние 2: LOST (Оригинал, таймер вышел)
   function showLost(lang) {
     document.body.classList.remove("win-nudge");
     document.body.classList.add("lost-nudge");
+
+    // ВАЖНО: убеждаемся, что таргет стоит на микротриггер
+    els.finalChest.setAttribute("data-target", "chest_lost");
 
     els.finalTopTitle.textContent = lang.lostTitle || FALLBACK_RU.lostTitle;
     els.finalTopSub.textContent   = lang.lostSub   || FALLBACK_RU.lostSub;
@@ -371,9 +373,13 @@
     els.final.classList.add("active");
   }
 
+  // Состояние 3: WIN (Клон, сундук открыт)
   function showWinClone(lang) {
     document.body.classList.remove("lost-nudge");
     document.body.classList.add("win-nudge");
+
+    // ВАЖНО: Меняем data-target, чтобы common.js знал, что это mainExit
+    els.finalChest.setAttribute("data-target", "chest_win");
 
     els.finalTopTitle.textContent = lang.winTitle || FALLBACK_RU.winTitle;
     els.finalTopSub.textContent   = lang.winSub   || FALLBACK_RU.winSub;
@@ -385,7 +391,6 @@
     els.finalHandR.style.display = "none";
     els.finalBelowHint.style.display = "none";
 
-    // показать подсказку win
     setTimeout(() => els.tapHint.classList.add("show"), 250);
     setTimeout(() => els.tapHands.classList.add("show"), 420);
 
@@ -415,7 +420,6 @@
   (async function boot() {
     const detected = detectLang();
     const { lang, data } = await loadLocale(detected);
-
     applyLang(lang, data);
 
     if (isClone) {
@@ -423,7 +427,6 @@
       return;
     }
 
-    // not clone => start from PLAY
     startTimer(data);
   })();
 })();
