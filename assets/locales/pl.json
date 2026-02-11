@@ -1,13 +1,13 @@
 {
-  "h1": "SZYBKO!<br>OFERTA WYGASA",
-  "sub": "Nie pozwól, by bonus przepadł!",
-  "hint": "⚡ KLIKNIJ W SKRZYNIĘ, ABY ODBLOKOWAĆ ⚡",
-  "winTitle": "💰 DOSTĘP PRZYZNANY!",
-  "winSub": "Bonus czeka poniżej",
-  "lostTitle": "⚠️ CZAS MINĄŁ!",
-  "lostSub": "Ostatnia szansa na odbiór",
-  "lostHint": "KLIKNIJ PRZYCISK TERAZ!",
-  "btn": "ODBIERZ BONUS",
-  "left": "Pozostało bonusów:",
-  "notifVerb": "odebrał(a)"
+  "h1": "Sekretny Bonus",
+  "sub": "Skrzynia zniknie, jeśli jej nie otworzysz",
+  "hint": "Klikaj, zanim będzie za późno!",
+  "winTitle": "🎁 Skrzynia Otwarta",
+  "winSub": "Został tylko jeden krok",
+  "lostTitle": "⚠️ OSTATNIA SZANSA",
+  "lostSub": "Wciąż możesz otworzyć skrzynię",
+  "lostHint": "Kliknij skrzynię TERAZ",
+  "btn": "Otwórz",
+  "left": "Aktywne bonusy:",
+  "notifVerb": "otworzył skrzynię"
 }
