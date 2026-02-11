@@ -1,13 +1,14 @@
 {
-  "h1": "Bonus Segreto",
+  "h1": "Bonus segreto all'interno",
   "sub": "Il forziere sparirà se non lo apri",
-  "hint": "Tocca prima che sia troppo tardi!",
-  "winTitle": "🎁 Forziere Aperto",
-  "winSub": "Manca solo un passo",
-  "lostTitle": "⚠️ ULTIMA POSSIBILITÀ",
-  "lostSub": "Puoi ancora aprire il forziere",
-  "lostHint": "Tocca il forziere ORA",
-  "btn": "Apri",
+  "hint": "Tocca prima che sia tardi!",
+  "winTitle": "🎁 Forziere aperto",
+  "winSub": "Manca solo un passaggio",
+  "winHint": "Prendi il tuo premio!",
+  "lostTitle": "⚠️ ULTIMA CHANCE",
+  "lostSub": "Il forziere può ancora essere aperto",
+  "lostHint": "Tocca il forziere ora",
+  "btn": "Apri forziere",
   "left": "Bonus attivi:",
   "notifVerb": "ha aperto il forziere"
 }
