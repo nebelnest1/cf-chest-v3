@@ -1,13 +1,14 @@
 {
-  "h1": "Sekretny Bonus",
-  "sub": "Skrzynia zniknie, jeśli jej nie otworzysz",
-  "hint": "Klikaj, zanim będzie za późno!",
-  "winTitle": "🎁 Skrzynia Otwarta",
-  "winSub": "Został tylko jeden krok",
+  "h1": "Sekretny bonus w środku",
+  "sub": "Skrzynia zniknie, jeśli jej не otworzysz",
+  "hint": "Tapnij, zanim będzie za późno!",
+  "winTitle": "🎁 Skrzynia otwarta",
+  "winSub": "Został jeden krok",
+  "winHint": "Odbierz nagrodę!",
   "lostTitle": "⚠️ OSTATNIA SZANSA",
-  "lostSub": "Wciąż możesz otworzyć skrzynię",
-  "lostHint": "Kliknij skrzynię TERAZ",
-  "btn": "Otwórz",
+  "lostSub": "Skrzynię wciąż można otworzyć",
+  "lostHint": "Tapnij skrzynię teraz",
+  "btn": "Otwórz skrzynię",
   "left": "Aktywne bonusy:",
   "notifVerb": "otworzył skrzynię"
 }
