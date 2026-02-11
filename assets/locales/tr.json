@@ -1,13 +1,13 @@
 {
-  "h1": "ÇABUK!<br>TEKLİF BİTİYOR",
-  "sub": "Kişisel bonusunu kaçırma!",
-  "hint": "⚡ AÇMAK İÇİN SANDIĞA DOKUN ⚡",
-  "winTitle": "💰 ERİŞİM AÇILDI!",
-  "winSub": "Bonusun aşağıda hazır",
-  "lostTitle": "⚠️ SÜRE DOLDU!",
-  "lostSub": "Bonus için son şans",
-  "lostHint": "HEMEN BUTONA BAS!",
-  "btn": "BONUSU AL",
-  "left": "Kalan bonus:",
-  "notifVerb": "aldı"
+  "h1": "Gizli Bonus İçeride",
+  "sub": "Açılmazsa sandık kaybolacak",
+  "hint": "Çok geç olmadan tıkla!",
+  "winTitle": "🎁 Sandık Açıldı",
+  "winSub": "Son bir adım kaldı",
+  "lostTitle": "⚠️ SON ŞANS",
+  "lostSub": "Sandığı hala açabilirsin",
+  "lostHint": "ŞİMDİ sandığa tıkla",
+  "btn": "Sandığı Aç",
+  "left": "Aktif bonuslar:",
+  "notifVerb": "sandığı açtı"
 }
