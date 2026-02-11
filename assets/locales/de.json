@@ -1,13 +1,14 @@
 {
-  "h1": "Geheimer Bonus",
-  "sub": "Die Truhe verschwindet gleich",
-  "hint": "Tippen, bevor es zu spät ist!",
+  "h1": "Geheimer Bonus drin",
+  "sub": "Truhe weg, wenn nicht geöffnet",
+  "hint": "Tippe, bevor es zu spät ist!",
   "winTitle": "🎁 Truhe geöffnet",
   "winSub": "Nur noch ein Schritt",
+  "winHint": "Hol dir deinen Preis!",
   "lostTitle": "⚠️ LETZTE CHANCE",
-  "lostSub": "Du kannst die Truhe noch öffnen",
-  "lostHint": "Tippe JETZT auf die Truhe",
-  "btn": "Öffnen",
+  "lostSub": "Truhe kann noch geöffnet werden",
+  "lostHint": "Jetzt auf die Truhe tippen",
+  "btn": "Truhe öffnen",
   "left": "Aktive Boni:",
   "notifVerb": "hat die Truhe geöffnet"
 }
