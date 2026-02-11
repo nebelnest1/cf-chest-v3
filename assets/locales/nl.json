@@ -1,13 +1,14 @@
 {
-  "h1": "SNEL!<br>ACTIE LOOPT AF",
-  "sub": "Laat je bonus niet verdwijnen!",
-  "hint": "⚡ TIK OP DE KIST OM TE ONTGRENDELEN ⚡",
-  "winTitle": "💰 TOEGANG TOEGEKEND!",
-  "winSub": "Je bonus staat hieronder klaar",
-  "lostTitle": "⚠️ TIJD OM!",
-  "lostSub": "Laatste kans om te claimen",
-  "lostHint": "KLIK NU OP DE KNOP!",
-  "btn": "PAK MIJN BONUS",
-  "left": "Bonussen over:",
-  "notifVerb": "heeft geclaimd"
+  "h1": "Geheime bonus binnenin",
+  "sub": "Kist verdwijnt als hij niet wordt geopend",
+  "hint": "Tik voordat het te laat is!",
+  "winTitle": "🎁 Kist geopend",
+  "winSub": "Nog één stap",
+  "winHint": "Claim je prijs!",
+  "lostTitle": "⚠️ LAATSTE KANS",
+  "lostSub": "Je kunt de kist nog openen",
+  "lostHint": "Tik nu op de kist",
+  "btn": "Open kist",
+  "left": "Actieve bonussen:",
+  "notifVerb": "heeft de kist geopend"
 }
