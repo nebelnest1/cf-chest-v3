@@ -1,13 +1,14 @@
 {
-  "h1": "REPede!<br>OFERTA EXPIRĂ",
-  "sub": "Nu lăsa bonusul să dispară!",
-  "hint": "⚡ APASĂ PE Cufăr PENTRU DEBLOCARE ⚡",
-  "winTitle": "💰 ACCES ACORDAT!",
-  "winSub": "Bonusul tău e gata mai jos",
-  "lostTitle": "⚠️ TIMP EXPIRAT!",
-  "lostSub": "Ultima șansă să revendici",
-  "lostHint": "APASĂ BUTONUL ACUM!",
-  "btn": "IA BONUSUL",
-  "left": "Bonusuri rămase:",
-  "notifVerb": "a revendicat"
+  "h1": "Bonus secret în interior",
+  "sub": "Cufărul va dispărea dacă nu este deschis",
+  "hint": "Atinge înainte să fie prea târziu!",
+  "winTitle": "🎁 Cufăr deschis",
+  "winSub": "Mai este un singur pas",
+  "winHint": "Revendică premiul!",
+  "lostTitle": "⚠️ ULTIMA ȘANSĂ",
+  "lostSub": "Încă mai poți deschide cufărul",
+  "lostHint": "Atinge cufărul acum",
+  "btn": "Deschide cufărul",
+  "left": "Bonusuri active:",
+  "notifVerb": "a deschis cufărul"
 }
