@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-version="0.0.156" data-landing-name="chest" lang="">
+<html data-version="0.0.156" data-landing-name="chest" lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -97,38 +97,15 @@
 
     /* --- NOTIFICATION (SOCIAL PROOF) --- */
     .notify-toast {
-      position: fixed;
-      top: 15px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-100px); /* Спрятан сверху */
-      background: rgba(20, 20, 20, 0.9);
-      border: 1px solid #4CAF50; /* Зеленая обводка (успех) */
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 50px;
-      font-size: 13px;
-      font-weight: 600;
-      z-index: 9999;
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: max-content;
-      max-width: 90%;
+      position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-100px);
+      background: rgba(20, 20, 20, 0.9); border: 1px solid #4CAF50; color: #fff;
+      padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      z-index: 9999; opacity: 0; transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex; align-items: center; gap: 10px; width: max-content; max-width: 90%;
       box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
-    .notify-toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-    .notify-icon {
-      width: 24px; height: 24px;
-      border-radius: 50%;
-      background: #4CAF50;
-      display: flex; justify-content: center; align-items: center;
-      font-size: 14px;
-    }
+    .notify-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .notify-icon { width: 24px; height: 24px; border-radius: 50%; background: #4CAF50; display: flex; justify-content: center; align-items: center; font-size: 14px; }
     .notify-text b { color: #4CAF50; }
   </style>
   
@@ -158,11 +135,11 @@
       <div class="hud-hint-container">
         <div class="hud-hint">
           <span class="hud-icon">⏱️</span>
-          <span id="hintPlayText">Тапай, пока не поздно!</span>
+          <span id="hintPlayText">Tap before it's too late!</span>
         </div>
       </div>
 
-      <div class="bonus-pill"><span id="txt-left">Активные бонусы:</span><span class="bonus-val">12</span></div>
+      <div class="bonus-pill"><span id="txt-left">Active bonuses:</span><span class="bonus-val">12</span></div>
     </div>
   </div>
 </div>
@@ -185,7 +162,7 @@
         </div>
       </div>
 
-      <div class="bonus-pill" id="finalBonusPill"><span id="txt-left-2">Активные бонусы:</span><span class="bonus-val">12</span></div>
+      <div class="bonus-pill" id="finalBonusPill"><span id="txt-left-2">Active bonuses:</span><span class="bonus-val">12</span></div>
     </div>
   </div>
 </div>
@@ -193,13 +170,22 @@
 <script>
 (function () {
   const RTL_LANGS = new Set(["ar","fa","he","ur"]);
+  // Список поддерживаемых языков
   const SUPPORTED = new Set(["ar","bg","bn","de","en","es","fa","fi","fil","fr","he","hi","hu","id","it","ja","kk","ko","ms","nl","no","pl","pt","ro","ru","sv","sy","th","tl","tr","uk","ur","uz","vi","zh"]);
 
-  const FALLBACK_RU = {
-    "h1": "Секретный бонус внутри", "sub": "Сундук исчезнет, если не открыть",
-    "hint": "Тапай, пока не поздно!", "left": "Активные бонусы:",
-    "lostTitle": "⚠️ ПОСЛЕДНИЙ ШАНС", "lostSub": "Сундук ещё можно открыть", "lostHint": "Тапай по сундуку сейчас",
-    "winTitle": "🎁 СУНДУК ОТКРЫТ", "winSub": "Остался один шаг", "winHint": "Забирай свой приз!"
+  // --- ENGLISH FALLBACK (DEFAULT) ---
+  const FALLBACK_EN = {
+    "h1": "Secret Bonus Inside",
+    "sub": "Chest will disappear if not opened",
+    "hint": "Tap before it's too late!",
+    "winTitle": "🎁 Chest Opened",
+    "winSub": "One step left",
+    "lostTitle": "⚠️ LAST CHANCE",
+    "lostSub": "You can still open the chest",
+    "lostHint": "Tap the chest NOW",
+    "btn": "Open Chest",
+    "left": "Active bonuses:",
+    "notifVerb": "opened the chest"
   };
 
   const cur = new URL(location.href);
@@ -215,7 +201,6 @@
     finalHandL: document.getElementById("finalHandL"), finalHandR: document.getElementById("finalHandR"),
     finalHudHint: document.getElementById("finalHudHint"), finalHudText: document.getElementById("finalHudText"),
     finalHudIcon: document.getElementById("finalHudIcon"), finalBonusPill: document.getElementById("finalBonusPill"),
-    // Notifier
     notifyToast: document.getElementById("notifyToast"), notifyText: document.getElementById("notifyText")
   };
 
@@ -224,23 +209,26 @@
     const p = new URLSearchParams(location.search);
     const q = (p.get("lang") || "").trim().toLowerCase();
     if (q) return q;
-    return ((navigator.language || "ru").split("-")[0]).toLowerCase();
+    return ((navigator.language || "en").split("-")[0]).toLowerCase();
   }
   async function loadLocale(lang) {
-    const safe = SUPPORTED.has(lang) ? lang : "ru";
+    // Если языка нет в списке, используем 'en'
+    const safe = SUPPORTED.has(lang) ? lang : "en";
     try {
       const res = await fetch(`./assets/locales/${safe}.json`, { cache: "no-store" });
       if (!res.ok) throw new Error("locale fetch failed");
       return { lang: safe, data: await res.json() };
-    } catch (e) { return { lang: "ru", data: FALLBACK_RU }; }
+    } catch (e) { return { lang: "en", data: FALLBACK_EN }; }
   }
   function applyLang(langCode, lang) {
     document.documentElement.lang = langCode;
     document.documentElement.dir = RTL_LANGS.has(langCode) ? "rtl" : "ltr";
-    setTextWithBr(els.h1, lang.h1 || FALLBACK_RU.h1);
-    els.sub.textContent  = lang.sub  || FALLBACK_RU.sub;
-    els.hintPlay.textContent = lang.hint || FALLBACK_RU.hint;
-    const leftTxt = lang.left || FALLBACK_RU.left;
+    
+    // Используем FALLBACK_EN если ключа нет в загруженном json
+    setTextWithBr(els.h1, lang.h1 || FALLBACK_EN.h1);
+    els.sub.textContent  = lang.sub  || FALLBACK_EN.sub;
+    els.hintPlay.textContent = lang.hint || FALLBACK_EN.hint;
+    const leftTxt = lang.left || FALLBACK_EN.left;
     els.left.textContent = leftTxt;
     els.left2.textContent = leftTxt;
   }
@@ -248,14 +236,13 @@
   function showLost(lang) {
     document.body.classList.remove("win-nudge"); document.body.classList.add("lost-nudge");
     els.finalChest.setAttribute("data-target", "chest_lost");
-    els.finalTopTitle.textContent = lang.lostTitle || FALLBACK_RU.lostTitle;
-    els.finalTopSub.textContent   = lang.lostSub   || FALLBACK_RU.lostSub;
+    els.finalTopTitle.textContent = lang.lostTitle || FALLBACK_EN.lostTitle;
+    els.finalTopSub.textContent   = lang.lostSub   || FALLBACK_EN.lostSub;
     els.finalChestImg.src = els.chestImg.getAttribute("data-closed") || "assets/images/chest-v2.webp";
     els.finalHandL.style.display = "block"; els.finalHandR.style.display = "block";
     
-    // HUD UPDATE
     els.finalHudIcon.textContent = "⚠️"; 
-    els.finalHudText.textContent = lang.lostHint || FALLBACK_RU.lostHint;
+    els.finalHudText.textContent = lang.lostHint || FALLBACK_EN.lostHint;
     els.finalHudHint.style.borderColor = "#ff4444"; 
     
     els.finalBonusPill.style.display = "inline-block";
@@ -265,14 +252,13 @@
   function showWinClone(lang) {
     document.body.classList.remove("lost-nudge"); document.body.classList.add("win-nudge");
     els.finalChest.setAttribute("data-target", "chest_win");
-    els.finalTopTitle.textContent = lang.winTitle || FALLBACK_RU.winTitle;
-    els.finalTopSub.textContent   = lang.winSub   || FALLBACK_RU.winSub;
+    els.finalTopTitle.textContent = lang.winTitle || FALLBACK_EN.winTitle;
+    els.finalTopSub.textContent   = lang.winSub   || FALLBACK_EN.winSub;
     els.finalChestImg.src = els.chestImg.getAttribute("data-open") || "assets/images/treasure-chest-open.webp";
     els.finalHandL.style.display = "none"; els.finalHandR.style.display = "none";
     
-    // HUD UPDATE
     els.finalHudIcon.textContent = "🎁"; 
-    els.finalHudText.textContent = lang.winHint || FALLBACK_RU.winHint;
+    els.finalHudText.textContent = lang.winHint || FALLBACK_EN.winHint;
     els.finalHudHint.style.borderColor = "#ffca28"; 
     
     els.finalBonusPill.style.display = "none"; 
@@ -289,25 +275,22 @@
     }, 1000);
   }
 
-  // --- SOCIAL PROOF NOTIFICATIONS ---
+  // --- SOCIAL PROOF ---
   function startNotifications() {
+    // Имена и действия - дефолт на английском, но для универсальности ок.
+    // Если захочешь локализовать - можно брать из json.
     const names = ["Alex", "Maria", "John", "Max", "Anna", "Dmitry", "Sarah", "Nick"];
     const actions = ["won <b>$500</b>", "got <b>100 FS</b>", "withdrew <b>$1200</b>", "won <b>$50</b>", "won <b>$2500</b>"];
     
-    // Первая всплывашка через 2 секунды
     setTimeout(show, 2000);
 
     function show() {
       const name = names[Math.floor(Math.random() * names.length)];
       const act = actions[Math.floor(Math.random() * actions.length)];
       els.notifyText.innerHTML = `${name} just ${act}`;
-      
       els.notifyToast.classList.add("show");
-      
-      // Скрыть через 3 сек
       setTimeout(() => {
         els.notifyToast.classList.remove("show");
-        // Следующая через рандомное время (3-6 сек)
         setTimeout(show, 3000 + Math.random() * 3000);
       }, 3000);
     }
@@ -318,7 +301,7 @@
     const { lang, data } = await loadLocale(detected);
     applyLang(lang, data);
     
-    startNotifications(); // Запускаем пуши
+    startNotifications();
 
     if (isClone) { showWinClone(data); return; }
     startTimer(data);
