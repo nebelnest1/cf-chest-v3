@@ -4,9 +4,10 @@
   "hint": "Tap before it's too late!",
   "winTitle": "🎁 Chest Opened",
   "winSub": "One step left",
+  "winHint": "Claim your prize!",
   "lostTitle": "⚠️ LAST CHANCE",
   "lostSub": "You can still open the chest",
-  "lostHint": "Tap the chest NOW",
+  "lostHint": "Tap the chest now",
   "btn": "Open Chest",
   "left": "Active bonuses:",
   "notifVerb": "opened the chest"
