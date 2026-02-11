@@ -1,13 +1,14 @@
 {
-  "h1": "SKYND DEG!<br>TILBUDET UTLØPER",
-  "sub": "Ikke la bonusen forsvinne!",
-  "hint": "⚡ TRYKK PÅ KISTEN FOR Å LÅSE OPP ⚡",
-  "winTitle": "💰 TILGANG GITT!",
-  "winSub": "Bonusen din er klar nedenfor",
-  "lostTitle": "⚠️ TIDEN ER UTE!",
-  "lostSub": "Siste sjanse til å hente den",
-  "lostHint": "TRYKK PÅ KNAPPEN NÅ!",
-  "btn": "HENT BONUS",
-  "left": "Bonuser igjen:",
-  "notifVerb": "hentet"
+  "h1": "Hemmelig bonus inni",
+  "sub": "Kisten forsvinner hvis den ikke åpnes",
+  "hint": "Tapp før det er for sent!",
+  "winTitle": "🎁 Kiste åpnet",
+  "winSub": "Ett steg igjen",
+  "winHint": "Hent premien din!",
+  "lostTitle": "⚠️ SISTE SJANSE",
+  "lostSub": "Du kan fortsatt åpne kisten",
+  "lostHint": "Tapp på kisten nå",
+  "btn": "Åpne kiste",
+  "left": "Aktive bonuser:",
+  "notifVerb": "åpnet kisten"
 }
