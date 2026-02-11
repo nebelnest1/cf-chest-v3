@@ -1,13 +1,14 @@
 {
   "h1": "Bonus Rahsia di Dalam",
   "sub": "Peti akan hilang jika tidak dibuka",
-  "hint": "Tekan sebelum terlambat!",
+  "hint": "Tap sebelum terlambat!",
   "winTitle": "🎁 Peti Dibuka",
-  "winSub": "Hanya tinggal satu langkah",
+  "winSub": "Satu langkah lagi",
+  "winHint": "Ambil ganjaran anda!",
   "lostTitle": "⚠️ PELUANG TERAKHIR",
   "lostSub": "Peti masih boleh dibuka",
-  "lostHint": "Tekan peti SEKARANG",
+  "lostHint": "Tap peti sekarang",
   "btn": "Buka Peti",
   "left": "Bonus aktif:",
-  "notifVerb": "telah membuka peti"
+  "notifVerb": "membuka peti"
 }
