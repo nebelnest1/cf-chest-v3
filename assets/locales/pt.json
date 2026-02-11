@@ -1,13 +1,13 @@
 {
-  "h1": "RÁPIDO!<br>A OFERTA EXPIRA",
-  "sub": "Não deixe seu bônus desaparecer!",
-  "hint": "⚡ TOQUE NO BAÚ PARA DESBLOQUEAR ⚡",
-  "winTitle": "💰 ACESSO CONCEDIDO!",
-  "winSub": "Seu bônus está pronto abaixo",
-  "lostTitle": "⚠️ TEMPO ESGOTADO!",
-  "lostSub": "Última chance de resgatar",
-  "lostHint": "CLIQUE NO BOTÃO AGORA!",
-  "btn": "PEGAR BÔNUS",
-  "left": "Bônus restantes:",
-  "notifVerb": "resgatou"
+  "h1": "Bônus Secreto Dentro",
+  "sub": "O baú desaparecerá se não abrir",
+  "hint": "Toque antes que acabe!",
+  "winTitle": "🎁 Baú Aberto",
+  "winSub": "Falta apenas um passo",
+  "lostTitle": "⚠️ ÚLTIMA CHANCE",
+  "lostSub": "Você ainda pode abrir o baú",
+  "lostHint": "Toque no baú AGORA",
+  "btn": "Abrir Baú",
+  "left": "Bônus ativos:",
+  "notifVerb": "abriu o baú"
 }
