@@ -1,13 +1,13 @@
 {
-  "h1": "¡RÁPIDO!<br>LA OFERTA TERMINA",
-  "sub": "No dejes que tu bono desaparezca.",
-  "hint": "⚡ TOCA EL COFRE PARA DESBLOQUEAR ⚡",
-  "winTitle": "💰 ¡ACCESO CONCEDIDO!",
-  "winSub": "Tu bono está listo abajo",
-  "lostTitle": "⚠️ ¡TIEMPO AGOTADO!",
-  "lostSub": "Última oportunidad para reclamar",
-  "lostHint": "¡PULSA EL BOTÓN YA!",
-  "btn": "OBTENER BONO",
-  "left": "Bonos restantes:",
-  "notifVerb": "reclamó"
+  "h1": "Bono Secreto Adentro",
+  "sub": "El cofre desaparecerá si no lo abres",
+  "hint": "¡Toca antes de que sea tarde!",
+  "winTitle": "🎁 Cofre Abierto",
+  "winSub": "Solo queda un paso",
+  "lostTitle": "⚠️ ÚLTIMA OPORTUNIDAD",
+  "lostSub": "Aún puedes abrir el cofre",
+  "lostHint": "Toca el cofre AHORA",
+  "btn": "Abrir Cofre",
+  "left": "Bonos activos:",
+  "notifVerb": "abrió el cofre"
 }
