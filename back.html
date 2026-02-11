@@ -2,36 +2,58 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Wait while redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading...</title>
+    <style>
+      /* Черный фон, чтобы не слепило при редиректе */
+      body { background-color: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    </style>
     <script>
-      const currentUrl = new URL(window.location.href)
-      const { searchParams } = currentUrl
-      const zoneParam = searchParams.get('z')
-      const domain = searchParams.get('domain')
-      const urlParam = searchParams.get('url')
+      try {
+        const currentUrl = new URL(window.location.href);
+        const searchParams = currentUrl.searchParams; // Так надежнее
 
-      searchParams.delete('z')
-      searchParams.delete('domain')
-      searchParams.delete('url')
+        const zoneParam = searchParams.get("z");
+        const domain = searchParams.get("domain");
+        const urlParam = searchParams.get("url");
 
-      if (urlParam) {
-        window.location.href = `${urlParam}?${searchParams}`
-      } else if (zoneParam) {
-        window.location.replace(`${domain}/afu.php?${searchParams}`)
-      } else {
-        window.location.href = 'https://google.com'
-        console.error('Zone param or url param were missed')
+        // Удаляем служебные
+        searchParams.delete("z");
+        searchParams.delete("domain");
+        searchParams.delete("url");
+
+        const qs = searchParams.toString();
+
+        if (urlParam) {
+          // Если передана прямая ссылка
+          const sep = urlParam.includes("?") ? "&" : "?";
+          window.location.replace(qs ? `${urlParam}${sep}${qs}` : urlParam);
+
+        } else if (zoneParam && domain) {
+          // Если передан домен и зона (ОСНОВНОЙ ВАРИАНТ)
+          
+          // 1. Убираем лишние слеши в конце домена
+          let base = domain.replace(/\/+$/, "");
+
+          // 2. ВАЖНО: Добавляем https://, если его нет
+          if (!base.startsWith("http")) {
+            base = "https://" + base;
+          }
+
+          // 3. Формируем правильную ссылку для Keitaro/Tracker
+          window.location.replace(`${base}/afu.php?zoneid=${zoneParam}&${qs}`);
+
+        } else {
+          // Если параметры потерялись — кидаем на Google
+          throw new Error("Params missed");
+        }
+      } catch (e) {
+        console.error(e);
+        window.location.replace("https://google.com");
       }
     </script>
   </head>
-
   <body>
-    <div style="display: flex; justify-self: center; align-items: center; height: 100vh">
-      <h1>Wait while redirecting...</h1>
-    </div>
+    <h1>Loading...</h1>
   </body>
 </html>
