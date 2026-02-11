@@ -1,13 +1,14 @@
 {
-  "h1": "Phần Thưởng Bí Mật",
+  "h1": "Phần thưởng bí mật bên trong",
   "sub": "Rương sẽ biến mất nếu không mở",
-  "hint": "Nhấn ngay kẻo lỡ!",
-  "winTitle": "🎁 Rương Đã Mở",
+  "hint": "Chạm ngay kẻo lỡ!",
+  "winTitle": "🎁 Rương đã mở",
   "winSub": "Chỉ còn một bước nữa",
-  "lostTitle": "⚠️ CƠ HỘI CUỐI CÙNG",
+  "winHint": "Nhận quà ngay!",
+  "lostTitle": "⚠️ CƠ HỘI CUỐИ CÙNG",
   "lostSub": "Vẫn có thể mở rương",
-  "lostHint": "Nhấn vào rương NGAY",
-  "btn": "Mở Rương",
-  "left": "Tiền thưởng:",
+  "lostHint": "Chạm vào rương ngay",
+  "btn": "Mở rương",
+  "left": "Phần thưởng hiện có:",
   "notifVerb": "đã mở rương"
 }
